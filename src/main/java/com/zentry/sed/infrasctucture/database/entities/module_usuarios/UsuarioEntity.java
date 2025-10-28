@@ -3,6 +3,8 @@ package com.zentry.sed.infrasctucture.database.entities.module_usuarios;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.zentry.sed.infrasctucture.database.entities.module_roles.RolEntity;
 
 import jakarta.persistence.Column;
@@ -30,6 +32,8 @@ public class UsuarioEntity {
     
     @Id
     @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id_usuario")
     private UUID id;
 
     @NotNull(message = "Debe proporcionar un nombre.")
@@ -38,6 +42,7 @@ public class UsuarioEntity {
 
     @NotNull(message = "Debe proporcionar un correo.")
     @Size(max = 254 , message = "El correo debe tener menos de 254 caracteres.")
+    @Column(unique = true)
     private String correo;
 
     @NotNull

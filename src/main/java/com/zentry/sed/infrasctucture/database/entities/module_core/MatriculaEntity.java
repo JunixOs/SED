@@ -3,6 +3,8 @@ package com.zentry.sed.infrasctucture.database.entities.module_core;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.zentry.sed.infrasctucture.database.entities.module_alumnos.EstudianteEntity;
 
 import jakarta.persistence.Column;
@@ -34,6 +36,7 @@ public class MatriculaEntity {
     
     @Id
     @GeneratedValue
+    @UuidGenerator
     @Column(name = "id_matricula")
     private UUID id;
 

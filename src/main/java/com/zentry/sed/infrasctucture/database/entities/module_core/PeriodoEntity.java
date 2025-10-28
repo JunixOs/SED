@@ -3,6 +3,8 @@ package com.zentry.sed.infrasctucture.database.entities.module_core;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class PeriodoEntity {
     
     @Id
     @GeneratedValue
+    @UuidGenerator
     @Column(name = "id_periodo")
     private UUID id;
 

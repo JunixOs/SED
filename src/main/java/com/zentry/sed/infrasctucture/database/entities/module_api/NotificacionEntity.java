@@ -3,6 +3,8 @@ package com.zentry.sed.infrasctucture.database.entities.module_api;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEntity;
 
 import jakarta.persistence.Column;
@@ -31,6 +33,7 @@ public class NotificacionEntity {
     
     @Id
     @GeneratedValue
+    @UuidGenerator
     @Column(name = "id_notificacion")
     private UUID id;
 

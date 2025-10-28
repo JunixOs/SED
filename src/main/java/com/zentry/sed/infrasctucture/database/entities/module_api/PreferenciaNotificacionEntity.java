@@ -3,7 +3,9 @@ package com.zentry.sed.infrasctucture.database.entities.module_api;
 import java.util.Map;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import org.hibernate.annotations.UuidGenerator;
+
+import org.hibernate.annotations.Type;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEntity;
 
@@ -16,15 +18,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(
     name = "preferencianotificacion"
 )
+@Getter
+@Setter
+@AllArgsConstructor
 public class PreferenciaNotificacionEntity {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
     @Column(name = "id_preferencianotificacion")
     private UUID id;
 

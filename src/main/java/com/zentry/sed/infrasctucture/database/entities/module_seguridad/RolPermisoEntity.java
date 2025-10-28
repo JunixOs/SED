@@ -2,6 +2,8 @@ package com.zentry.sed.infrasctucture.database.entities.module_seguridad;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.zentry.sed.infrasctucture.database.entities.module_roles.RolEntity;
 
 import jakarta.persistence.Column;
@@ -32,6 +34,7 @@ public class RolPermisoEntity {
     
     @Id
     @GeneratedValue
+    @UuidGenerator
     @Column(name = "id_rol_permiso")
     private UUID id;
 

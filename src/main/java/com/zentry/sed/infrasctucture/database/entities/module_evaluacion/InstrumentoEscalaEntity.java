@@ -2,6 +2,8 @@ package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,6 +32,7 @@ public class InstrumentoEscalaEntity {
     
     @Id
     @GeneratedValue
+    @UuidGenerator
     @Column(name = "id_instrumento_escala")
     private UUID id;
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h2>Iniciar sesión</h2>
+
+<form th:action="@{/perform_login}" method="post"> <!-- El form primero se envia a Spring Security -->
+    <label>Email:</label>
+    <input type="text" name="username"/> <!-- Spring espera "username" por defecto -->
+    <label>Contraseña:</label>
+    <input type="password" name="password"/>
+    <button type="submit">Ingresar</button>
+</form>
+
+<div th:if="${param.errorLogin}">
+    Usuario o contraseña incorrectos
+</div>
+</body>
+</html>
