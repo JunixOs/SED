@@ -2,6 +2,8 @@ package com.zentry.sed.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.http.HttpStatus;
@@ -24,5 +26,11 @@ public class SecurityConfig {
             .httpBasic(); // opcional: si quieres permitir autenticación básica
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // 10 es la fuerza por defecto; puedes aumentarla si necesitas más seguridad (y CPU)
+        return new BCryptPasswordEncoder(10);
     }
 }

@@ -13,7 +13,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +25,6 @@ import lombok.Setter;
 )
 @Getter
 @Setter
-@AllArgsConstructor
 public class PeriodoEntity {
     
     @Id

@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.zentry.sed.infrasctucture.database.entities.module_roles.RolEntity;
 
 public interface RolJPARepository extends JpaRepository<RolEntity , UUID>{
-    Optional<RolEntity> findByNombre(String nombre);
+    Optional<RolEntity> findById(UUID id);
 }

@@ -15,9 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,35 +24,32 @@ import lombok.Setter;
 )
 @Getter
 @Setter
-@AllArgsConstructor
 public class UsuarioEntity {
     
+    /*
+        Aqui solo anotaciones JPA
+    */
+
     @Id
     @GeneratedValue
     @UuidGenerator
     @Column(name = "id_usuario")
     private UUID id;
 
-    @NotNull(message = "Debe proporcionar un nombre.")
-    @Size(max = 100 , message = "El nombre debe tener menos de 100 caracteres.")
+    @Column(name = "nombre" , nullable = false , length = 100)
     private String nombre;
 
-    @NotNull(message = "Debe proporcionar un correo.")
-    @Size(max = 254 , message = "El correo debe tener menos de 254 caracteres.")
-    @Column(unique = true)
+    @Column(name = "correo" , unique = true , nullable = false , length = 254)
     private String correo;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rol_id")
     private RolEntity rol;
 
-    @NotNull(message = "Debe proporcionar un hash.")
-    @Size(max = 128 , message = "El hash debe tener menos de 128 caracteres.")
-    @Column(name = "password_hash")
+    @Column(name = "password_hash" , nullable = false , length = 128)
     private String passwordHash;
 
-    @Size(max = 20 , message = "El estado debe tener menos de 20 caracteres.")
+    @Column(name = "estado" , nullable = true , length = 20)
     private String estado;
     
     @Column(name = "creado_en" , columnDefinition = "TIMESTAMP")

@@ -18,7 +18,6 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +27,6 @@ import lombok.Setter;
 )
 @Setter
 @Getter
-@AllArgsConstructor
 public class PreguntaEntity {
     
     @Id

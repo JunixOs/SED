@@ -16,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +28,6 @@ import lombok.Setter;
 )
 @Getter
 @Setter
-@AllArgsConstructor
 public class RolPermisoEntity {
     
     @Id
