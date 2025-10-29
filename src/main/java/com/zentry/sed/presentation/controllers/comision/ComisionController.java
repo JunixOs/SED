@@ -1,0 +1,15 @@
+package com.zentry.sed.presentation.controllers.comision;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/comision")
+public class ComisionController {
+
+    @GetMapping("/home")
+    public String comisionIndex(){
+        return "comision/home";
+    } 
+}

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html class="h-full" lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SED | Sistema de Evaluación Docente</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+    theme: {
+        extend: {
+        fontFamily: {
+            sans: ["Inter", "sans-serif"],
+        },
+        colors: {
+            primary: {
+            DEFAULT: "#16a34a", // verde principal
+            dark: "#15803d", // verde oscuro para hover
+            },
+        },
+        },
+    },
+    };
+</script>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+    rel="stylesheet"/>
+    <style>
+    html{
+        height: 100vh;
+    }
+
+    html, body {
+    min-height: 100%;
+    }
+
+    /* Animación para mostrar el panel de Visión*/
+    #vision-panel.show > div {
+    opacity: 1;
+    transform: scale(1); /* aparece con efecto de ampliación */
+    }
+    #mision-panel.show > div {
+    opacity: 1;
+    transform: scale(1);
+    }
+
+    #ingreso-panel.show > div {
+    opacity: 1;
+    transform: scale(1);
+    }
+
+    /* FadeIn hacia arriba para secciones (como el Hero) */
+    @keyframes fadeInUpSection {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* empieza abajo */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);    /* sube a su posición final */
+    }
+    }
+
+    /* Clase utilitaria para usar el fadeInUpSection */
+    .animate-fade-in-up {
+    animation: fadeInUpSection 1s ease-out forwards;
+    }
+
+    html{
+            scroll-behavior: smooth;
+    }
+    /* Comportamiento de scroll suave*/
+    body {
+    height: 100%;
+    background-color: #ffffff;
+    }
+    .show {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+
+    header{
+    background-color: #ffffff;
+
+    }
+    main{
+    background-size: cover;
+    background-position: center ;
+    background-repeat: no-repeat;
+
+    }
+
+
+    /*ESTILOS*/
+
+    #inicio {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    animation: fadeInUp 0.8s ease-out forwards;
+    margin: auto;
+    }
+
+    .container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    }
+
+    @media (min-width: 768px) {
+    .container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    }
+    }
+
+    .texto {
+    text-align: center;
+    width: 100%;
+    }
+
+    @media (min-width: 768px) {
+    .texto {
+    text-align: left;
+    width: 50%;
+    }
+    }
+
+    .texto h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #16a34a;
+    line-height: 1.2;
+    }
+
+    .texto .verde {
+    color: #16a34a;
+    }
+
+    .texto p {
+    font-size: 1.125rem;
+    color: #374151;
+    max-width: 40rem;
+    margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+    .texto p {
+    margin: 0;
+    }
+    }
+
+    .resaltado {
+    font-weight: 600;
+    color: #16a34a;
+    }
+
+    .boton-contenedor {
+    margin-top: 2.5rem;
+    }
+
+    .boton {
+    display: inline-block;
+    background-color: #16a34a;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .boton:hover {
+    background-color: #15803d;
+    transform: scale(1.05);
+    }
+
+    .imagen {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+    .imagen {
+    width: 50%;
+    justify-content: flex-start;
+    }
+    }
+
+    .imagen img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    }
+
+    @media (min-width: 768px) {
+    .imagen img {
+    width: 66%;
+    }
+    }
+
+    @media (min-width: 1024px) {
+    .imagen img {
+    width: 50%;
+    }
+    }
+
+    /* Animación */
+    @keyframes fadeInUp {
+    from {
+    opacity: 0;
+    transform: translateY(20px);
+    }
+    to {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    }
+
+
+
+    </style>
+</head>
+<body class="flex flex-col h-screen min-h-screen">
+
+    <header class="sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between">
+
+        <!-- Logo / nombre -->
+        <div class="text-2xl font-extrabold text-primary tracking-tight hover:underline">
+        <a th:href="@{/}">SED</a>
+        </div>
+
+        <!-- Navegación -->
+        <nav class="flex flex-wrap items-center justify-center gap-6 mt-4 sm:mt-0 text-gray-800 text-base font-medium">
+        
+        <a href="#" id="toggle-vision" class="relative group" data-no-loader>
+            <span class="group-hover:text-primary transition-colors">Visión</span>
+            <span class="block h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </a>
+        <a href="#" id="toggle-mision" class="relative group" data-no-loader>
+            <span class="group-hover:text-primary transition-colors">Misión</span>
+            <span class="block h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </a>
+        <a href="#" id="toggle-ingreso" class="relative group" data-no-loader>
+            <span class="group-hover:text-primary transition-colors">Explorar</span>
+            <span class="block h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </a>
+
+        <a th:if="${userLogged}" th:href="@{/logout}" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition">
+            Cerrar sesión
+        </a> <!-- Spring Security va a manejar la destrucción de la sesión y redirigirá según tu configuración -->
+        <a th:unless="${userLogged}" th:href="@{/login}" class="bg-primary text-white px-5 py-2.5 rounded-full font-semibold shadow hover:bg-primary-dark transition">
+            Iniciar sesión
+        </a>
+        </nav>
+        <div th:if="${param.logout}" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md z-50">Has cerrado sesión correctamente</div>
+    </div>
+    </header>
+
+    <main id="main" class="flex-grow" th:style="|background-image: url('@{/images/core/tich2.svg}');|">
+    <div id="vision-panel" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white max-w-4xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 ease-out overflow-y-auto max-h-[90vh] relative">
+
+    <!-- Botón Cerrar -->
+    <button id="close-vision"
+        class="absolute top-4 right-4 text-gray-500 hover:text-primary text-2xl font-bold focus:outline-none">
+        &times;
+    </button>
+
+    <!-- Contenido dividido -->
+    <div class="flex flex-col md:flex-row items-center gap-6">
+        
+        <!-- Texto -->
+        <div class="md:w-2/3">
+        <h2 class="text-3xl font-bold text-primary mb-4">Visión</h2>
+        <p class="text-gray-700 text-lg leading-relaxed">
+            Ser la plataforma referente en América Latina para la gestión transparente y participativa de la calidad docente universitaria, brindando datos fiables que fortalezcan las decisiones académicas y el crecimiento profesional continuo del profesorado.
+        </p>
+        </div>
+
+        <!-- Imagen -->
+        <div class="md:w-1/3">
+        <img th:src="@{/images/core/vision.svg}" alt="Ilustración visión"
+                class="w-full h-auto rounded-lg">
+        </div>
+
+    </div>
+
+    </div>
+    </div>
+
+        <!-- PANEL MISIÓN -->
+    <div id="mision-panel" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white max-w-4xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 ease-out overflow-y-auto max-h-[90vh] relative">
+
+    <!-- Botón cerrar -->
+    <button id="close-mision"
+        class="absolute top-4 right-4 text-gray-500 hover:text-primary text-2xl font-bold focus:outline-none">
+        &times;
+    </button>
+
+    <!-- Contenido dividido -->
+    <div class="flex flex-col md:flex-row items-center gap-6">
+        
+        <!-- Texto -->
+        <div class="md:w-2/3">
+        <h2 class="text-3xl font-bold text-primary mb-4">Misión</h2>
+        <p class="text-gray-700 text-lg leading-relaxed">
+            Proporcionar a la comunidad universitaria una herramienta digital intuitiva que permita a los estudiantes evaluar, de forma anónima y segura, el desempeño docente; generando información valiosa, 
+            filtrable y accionable que promueva la excelencia académica y fortalezca la toma de decisiones institucionales.
+        </p>
+        </div>
+
+        <!-- Imagen (misma que visión) -->
+        <div class="md:w-1/3">
+        <img th:src="@{/images/core/mision.svg}" alt="Ilustración misión"
+                class="w-full h-auto">
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+    <!-- PANEL COMO INGRESAR -->
+    <div id="ingreso-panel" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white max-w-4xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 ease-out overflow-y-auto max-h-[90vh] relative">
+
+    <!-- Botón cerrar -->
+    <button id="close-ingreso" class="absolute top-4 right-4 text-gray-500 hover:text-primary text-2xl font-bold focus:outline-none">
+        &times;
+    </button>
+
+    <!-- Contenido dividido -->
+    <div class="flex flex-col md:flex-row items-center gap-6">
+
+        <!-- Texto -->
+        <div class="md:w-2/3">
+        <h2 class="text-3xl font-bold text-primary mb-4">¿Cómo ingresar?</h2>
+        <ol class="list-decimal list-inside space-y-4 text-gray-700 text-base sm:text-lg leading-relaxed">
+            <li>Ingresa a <strong>https://sed.pautb.com</strong> desde tu navegador.</li>
+            <li>Presiona <strong>"Iniciar sesión"</strong> e inicia sesión con tu cuenta.</li>
+            <li>Selecciona el <strong>curso</strong> y <strong>docente</strong> que deseas evaluar.</li>
+            <li>Evalúa con estrellas y agrega comentarios si lo deseas.</li>
+            <li>Haz clic en <strong>"Enviar"</strong> para completar. ¡Listo!</li>
+        </ol>
+        </div>
+
+        <!-- Imagen -->
+        <div class="md:w-1/3">
+        <img th:src="@{/images/core/explore.svg}" alt="Ilustración misión"
+                class="w-full h-auto">
+        </div>
+
+    </div>
+
+    </div>
+    </div>
+
+
+    <section id="inicio">
+    <div class="container">
+
+    <!-- Texto a la izquierda -->
+    <div class="texto">
+        <h2>
+        ¡Bienvenido al <span class="verde">Sistema de Evaluación Docente</span>!
+        </h2>
+        <p>
+        Comprometidos con la calidad educativa a través de evaluaciones
+        <span class="resaltado">anónimas, seguras y efectivas</span>.
+        </p>
+        <div class="boton-contenedor">
+        <a th:href="@{/login}" class="boton">
+            Empezar evaluación
+        </a>
+        </div>
+    </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+<script>
+      // Función mejorada para mostrar el loader
+    function showLoader(message = "Cargando...") {
+    const loader     = document.getElementById("loaderOverlay");
+    const loaderText = document.getElementById("loaderText");   // ✔️
+
+        if (loader && loaderText) {
+            loaderText.textContent = message;
+            loader.style.display = "flex";
+            document.body.style.overflow = "hidden"; // Previene el scroll
+            setTimeout(() => {
+            loader.classList.add("show");
+            }, 10);
+        }
+        }
+        
+    /* ------- Paneles emergentes ------- */
+    function configurarPanel(idBoton, idPanel, idCerrar) {
+    const toggle = document.getElementById(idBoton);
+    const panel  = document.getElementById(idPanel);
+    const close  = document.getElementById(idCerrar);
+
+    toggle?.addEventListener("click", e => {
+    e.preventDefault();
+    const hidden = panel.classList.contains("hidden");
+    hidden
+        ? (panel.classList.remove("hidden"), setTimeout(() => panel.classList.add("show"), 10))
+        : (panel.classList.remove("show"),   setTimeout(() => panel.classList.add("hidden"), 200));
+    });
+
+    close?.addEventListener("click", () => {
+    panel.classList.remove("show");
+    setTimeout(() => panel.classList.add("hidden"), 200);
+    });
+
+        // Intercepta todos los clicks en enlaces
+        document.addEventListener("click", e => {
+    if (!panel.classList.contains("hidden") && !panel.contains(e.target) && !toggle.contains(e.target)) {
+        panel.classList.remove("show");
+        setTimeout(() => panel.classList.add("hidden"), 200);
+    }
+    });
+    }
+        // Intercepta envíos de formularios
+        document.addEventListener("submit", (e) => {
+        if (!e.target.hasAttribute("data-no-loader")) {
+            showLoader("Procesando...");
+        }
+        });
+
+        // Muestra loader al cargar la página
+        window.addEventListener("load", () => {
+        hideLoader();
+        });
+
+        // Muestra loader al recargar la página
+        window.addEventListener("beforeunload", () => {
+        showLoader();
+        });
+    function configurarPanel(idBoton, idPanel, idCerrar) {
+    const toggle = document.getElementById(idBoton);
+    const panel = document.getElementById(idPanel);
+    const close = document.getElementById(idCerrar);
+
+    // Abrir/cerrar con botón
+    toggle?.addEventListener("click", (e) => {
+        e.preventDefault();
+        const isHidden = panel.classList.contains("hidden");
+
+        if (isHidden) {
+        panel.classList.remove("hidden");
+        setTimeout(() => panel.classList.add("show"), 10);
+        } else {
+        panel.classList.remove("show");
+        setTimeout(() => panel.classList.add("hidden"), 200);
+        }
+    });
+
+    // Cerrar con botón interno
+    close?.addEventListener("click", () => {
+        panel.classList.remove("show");
+        setTimeout(() => panel.classList.add("hidden"), 200);
+    });
+
+    // Cerrar haciendo clic fuera
+    document.addEventListener("click", (e) => {
+        if (
+        panel &&
+        !panel.contains(e.target) &&
+        !toggle.contains(e.target)
+        ) {
+        panel.classList.remove("show");
+        setTimeout(() => panel.classList.add("hidden"), 200);
+        }
+    });
+    }
+
+    // Configura los tres paneles
+    configurarPanel("toggle-vision", "vision-panel", "close-vision");
+    configurarPanel("toggle-mision", "mision-panel", "close-mision");
+    configurarPanel("toggle-ingreso", "ingreso-panel", "close-ingreso");
+
+    // Hacer desaparecer el mansaje de logout
+    setTimeout(() => {
+        const msg = document.querySelector('[th\\:if]');
+        if (msg) msg.remove();
+    }, 3000);
+</script>
+</body>
+</html>
