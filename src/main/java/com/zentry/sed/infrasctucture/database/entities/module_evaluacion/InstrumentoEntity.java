@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.zentry.sed.infrasctucture.database.entities.module_core.PeriodoEntity;
 
 import jakarta.persistence.Column;
@@ -30,8 +28,10 @@ public class InstrumentoEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_instrumento")
+    @Column(
+        name = "id_instrumento" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull

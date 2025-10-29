@@ -25,7 +25,10 @@ public class ParametroEntity {
     @Id
     @GeneratedValue
     @UuidGenerator
-    @Column(name = "id_parametro")
+    @Column(
+        name = "id_parametro" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe especificar un nombre.")

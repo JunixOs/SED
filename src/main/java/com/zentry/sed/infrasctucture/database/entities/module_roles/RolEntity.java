@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_roles;
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -15,8 +13,8 @@ public class RolEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_rol", updatable = false, nullable = false)
+    @Column(name = "id_rol", updatable = false, nullable = false,
+            columnDefinition = "UUID DEFAULT gen_random_uuid()")
     private UUID id;
 
     @Column(name = "nombre", length = 50, nullable = false, unique = true)

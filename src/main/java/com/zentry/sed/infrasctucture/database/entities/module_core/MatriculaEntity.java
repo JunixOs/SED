@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_core;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.zentry.sed.infrasctucture.database.entities.module_alumnos.EstudianteEntity;
 
 import jakarta.persistence.Column;
@@ -34,8 +32,10 @@ public class MatriculaEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_matricula")
+    @Column(
+        name = "id_matricula" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe especificar una fecha de matricula.")

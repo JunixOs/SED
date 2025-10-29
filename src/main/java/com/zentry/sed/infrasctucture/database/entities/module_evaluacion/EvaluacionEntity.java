@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.zentry.sed.infrasctucture.database.entities.module_alumnos.EstudianteEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_core.SeccionEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_docentes.DocenteEntity;
@@ -37,8 +35,10 @@ public class EvaluacionEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_evaluacion")
+    @Column(
+        name = "id_evaluacion" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe especificar una fecha.")

@@ -1,8 +1,12 @@
 package com.zentry.sed.utils;
 
+import java.util.UUID;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.zentry.sed.security.CustomUserDetails;
 
 // Esto sirve para ver la informacion del usuario autenticado desde cualquier componente, servicio o controlador.
 
@@ -33,6 +37,16 @@ public class AuthUtils {
                     .map(GrantedAuthority::getAuthority)
                     .findFirst()
                     .orElse(null);
+        }
+        return null;
+    }
+
+    // SOLUCIONAR ESTE ERROR, EL ID SE DEVUELVE COMO NULL
+    public static UUID getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUser) {
+            return customUser.getId();
         }
         return null;
     }

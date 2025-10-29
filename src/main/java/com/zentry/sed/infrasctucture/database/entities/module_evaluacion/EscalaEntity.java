@@ -25,7 +25,10 @@ public class EscalaEntity {
     @Id
     @GeneratedValue
     @UuidGenerator
-    @Column(name = "id_escala")
+    @Column(
+        name = "id_escala" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe proporcionar un nombre")

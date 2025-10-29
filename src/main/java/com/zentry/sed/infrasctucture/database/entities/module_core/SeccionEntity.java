@@ -2,8 +2,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_core;
 
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.zentry.sed.infrasctucture.database.entities.module_docentes.DocenteEntity;
 
 import jakarta.persistence.Column;
@@ -33,8 +31,10 @@ public class SeccionEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_seccion")
+    @Column(
+        name = "id_seccion" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/comision")
 public class ComisionController {
 
-    @GetMapping("/home")
+    @GetMapping({"/dashboard" , ""})
     public String comisionIndex(){
-        return "comision/home";
+        return "comision/dashboard";
     } 
 }

@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_api;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEntity;
 
 import jakarta.persistence.Column;
@@ -31,8 +29,10 @@ public class AccesoSistemaEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_accesosistema")
+    @Column(
+        name = "id_accesosistema" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull

@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_api;
 import java.util.Map;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import org.hibernate.annotations.Type;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEntity;
@@ -31,8 +29,10 @@ public class PreferenciaNotificacionEntity {
     
     @Id
     @GeneratedValue(generator = "UUID")
-    @UuidGenerator
-    @Column(name = "id_preferencianotificacion")
+    @Column(
+        name = "id_preferencianotificacion" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe especificar al menos una preferencia.")

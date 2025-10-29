@@ -2,8 +2,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_core;
 
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,8 +22,10 @@ public class CursoEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_curso")
+    @Column(
+        name = "id_curso" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe proporcionar un nombre.")

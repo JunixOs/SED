@@ -2,8 +2,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
 
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,8 +23,10 @@ public class CriterioEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_criterio")
+    @Column(
+        name = "id_criterio" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull(message = "Debe proporcionar un nombre.")

@@ -44,7 +44,7 @@
 
         <!-- Logo -->
         <div class="flex items-center gap-3">
-          <a th:href="@{/comision/home}" class="flex items-center gap-2 hover:text-emerald-100 transition-colors">
+          <a th:href="@{/comision/dashboard}" class="flex items-center gap-2 hover:text-emerald-100 transition-colors">
             <i class="fas fa-chart-line text-2xl"></i>
             <span class="font-bold text-xl">SED</span>
           </a>
@@ -53,7 +53,7 @@
         <!-- Desktop nav -->
         <div class="hidden md:flex items-center space-x-8">
           <a class="nav-link flex items-center gap-2"
-             th:href="@{/comision/encuesta/{usuarioId}(usuarioId=${usuarioId})}">
+             th:href="@{/comision/encuesta/{userId}(userId=${userId})}">
             <i class="fas fa-pen-to-square"></i><span>Realizar Encuesta</span>
           </a>
 
@@ -64,17 +64,17 @@
               <i class="fas fa-chevron-down text-xs ml-1"></i>
             </button>
             <div class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 hidden group-hover:block animate-fade-in">
-              <a th:href="@{/comision/reportes/general/{usuarioId}(usuarioId=${usuarioId})}"
+              <a th:href="@{/comision/reportes/general/{userId}(userId=${userId})}"
                  class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Resumen General</a>
-              <a th:href="@{/comision/reportes/docente/{usuarioId}(usuarioId=${usuarioId})}"
+              <a th:href="@{/comision/reportes/docente/{userId}(userId=${userId})}"
                  class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Por Docente</a>
-              <a th:href="@{/comision/reportes/curso/{usuarioId}(usuarioId=${usuarioId})}"
+              <a th:href="@{/comision/reportes/curso/{userId}(userId=${userId})}"
                  class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Por Curso</a>
             </div>
           </div>
 
           <a class="nav-link flex items-center gap-2"
-             th:href="@{/comision/perfil/{usuarioId}(usuarioId=${usuarioId})}">
+             th:href="@{/comision/perfil/{userId}(userId=${userId})}">
             <i class="fas fa-user"></i><span>Perfil</span>
           </a>
         </div>
@@ -101,7 +101,7 @@
               <i class="fas fa-chevron-down text-xs"></i>
             </button>
             <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 hidden group-hover:block animate-fade-in">
-              <a th:href="@{/comision/perfil/{usuarioId}(usuarioId=${usuarioId})}"
+              <a th:href="@{/comision/perfil/{userId}(userId=${userId})}"
                  class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i class="fas fa-user-circle mr-2"></i>Perfil
               </a>
@@ -137,26 +137,26 @@
           </button>
         </div>
         <nav class="space-y-4">
-          <a th:href="@{/comision/encuesta/{usuarioId}(usuarioId=${usuarioId})}"
+          <a th:href="@{/comision/encuesta/{userId}(userId=${userId})}"
              class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <i class="fas fa-pen-to-square"></i><span>Realizar Encuesta</span>
           </a>
           <div class="space-y-2">
             <p class="px-3 text-sm font-semibold text-gray-500 dark:text-gray-400">Reportes</p>
-            <a th:href="@{/comision/reportes/general/{usuarioId}(usuarioId=${usuarioId})}"
+            <a th:href="@{/comision/reportes/general/{userId}(userId=${userId})}"
                class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 ml-2">
               <i class="fas fa-chart-pie"></i><span>Resumen General</span>
             </a>
-            <a th:href="@{/comision/reportes/docente/{usuarioId}(usuarioId=${usuarioId})}"
+            <a th:href="@{/comision/reportes/docente/{userId}(userId=${userId})}"
                class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 ml-2">
               <i class="fas fa-user-tie"></i><span>Por Docente</span>
             </a>
-            <a th:href="@{/comision/reportes/curso/{usuarioId}(usuarioId=${usuarioId})}"
+            <a th:href="@{/comision/reportes/curso/{userId}(userId=${userId})}"
                class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 ml-2">
               <i class="fas fa-book"></i><span>Por Curso</span>
             </a>
           </div>
-          <a th:href="@{/comision/perfil/{usuarioId}(usuarioId=${usuarioId})}"
+          <a th:href="@{/comision/perfil/{userId}(userId=${userId})}"
              class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <i class="fas fa-user"></i><span>Perfil</span>
           </a>
@@ -190,13 +190,13 @@
     <!-- Tu contenido -->
     <section class="animate-fade-in">
       <h1 class="text-2xl font-bold mb-2">Bienvenido(a), <span th:text="${usuarioNombre} ?: 'Comisión'">Comisión</span></h1>
-      <p class="text-sm opacity-70 mb-6" th:text="'ID: ' + ${usuarioId}">ID:</p>
+      <p class="text-sm opacity-70 mb-6" th:text="'ID: ' + ${userId}">ID:</p>
       <div class="grid md:grid-cols-3 gap-4">
-        <a th:href="@{/comision/encuesta/{usuarioId}(usuarioId=${usuarioId})}"
+        <a th:href="@{/comision/encuesta/{userId}(userId=${userId})}"
            class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition"><i class="fas fa-pen-to-square mr-2"></i> Realizar Encuesta</a>
-        <a th:href="@{/comision/reportes/general/{usuarioId}(usuarioId=${usuarioId})}"
+        <a th:href="@{/comision/reportes/general/{userId}(userId=${userId})}"
            class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition"><i class="fas fa-chart-pie mr-2"></i> Resumen General</a>
-        <a th:href="@{/comision/perfil/{usuarioId}(usuarioId=${usuarioId})}"
+        <a th:href="@{/comision/perfil/{userId}(userId=${userId})}"
            class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition"><i class="fas fa-user mr-2"></i> Perfil</a>
       </div>
     </section>

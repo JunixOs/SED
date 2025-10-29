@@ -1,6 +1,7 @@
 package com.zentry.sed.infrasctucture.database.adapter.module_usuarios;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,9 @@ public class UsuarioRepositoryAdapter implements IUsuarioRepository {
             .stream()
             .map(UsuarioMapper::toDomain)
             .collect(Collectors.toList());
+    }
+
+    public Optional<UsuarioDomainEntity> findByCorreo(String correo){
+        return usuarioJPARepository.findByCorreo(correo).map(u -> UsuarioMapper.toDomain(u));
     }
 }

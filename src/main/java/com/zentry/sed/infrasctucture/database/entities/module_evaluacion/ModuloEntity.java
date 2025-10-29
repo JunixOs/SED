@@ -3,8 +3,6 @@ package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,8 +29,10 @@ public class ModuloEntity {
     
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_modulo")
+    @Column(
+        name = "id_modulo" , updatable = false , nullable = false , 
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @NotNull

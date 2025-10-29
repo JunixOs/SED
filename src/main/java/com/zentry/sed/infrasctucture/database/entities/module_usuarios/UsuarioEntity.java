@@ -5,13 +5,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.zentry.sed.infrasctucture.database.entities.module_roles.RolEntity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "usuario")
@@ -19,31 +15,23 @@ public class UsuarioEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id_usuario", updatable = false, nullable = false)
+    @Column(name = "id_usuario", updatable = false, nullable = false,
+            columnDefinition = "UUID DEFAULT gen_random_uuid()") // Esto permite que la propia base de datos PostgreSQL se encargue de generar automaticamente el UUID
     private UUID id;
 
-    @NotNull(message = "Debe proporcionar un nombre.")
-    @Size(max = 100, message = "El nombre debe tener menos de 100 caracteres.")
     @Column(length = 100, nullable = false)
     private String nombre;
 
-    @NotNull(message = "Debe proporcionar un correo.")
-    @Size(max = 254, message = "El correo debe tener menos de 254 caracteres.")
     @Column(unique = true, length = 254, nullable = false)
     private String correo;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "rol_id", nullable = false)
     private RolEntity rol;
 
-    @NotNull(message = "Debe proporcionar un hash.")
-    @Size(max = 128, message = "El hash debe tener menos de 128 caracteres.")
     @Column(name = "password_hash", length = 128, nullable = false)
     private String passwordHash;
 
-    @Size(max = 20, message = "El estado debe tener menos de 20 caracteres.")
     @Column(length = 20)
     private String estado;
 

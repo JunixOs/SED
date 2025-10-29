@@ -51,7 +51,7 @@
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex items-center gap-3">
-          <a th:href="@{/alumno/home}" class="flex items-center gap-2 hover:text-primary-light transition-colors duration-200">
+          <a th:href="@{/alumno/dashboard}" class="flex items-center gap-2 hover:text-primary-light transition-colors duration-200">
             <i class="fas fa-graduation-cap text-2xl"></i>
             <span class="font-bold text-xl">SED</span>
           </a>
@@ -63,15 +63,15 @@
             <i class="fas fa-home"></i><span>Inicio</span>
           </a>
           <a class="nav-link flex items-center gap-2"
-             th:href="@{/alumno/perfil/{usuarioId}(usuarioId=${usuarioId})}">
+             th:href="@{/alumno/profile/{userId}(userId=${userId})}">
             <i class="fas fa-user"></i><span>Perfil</span>
           </a>
           <a class="nav-link flex items-center gap-2"
-             th:href="@{/alumno/evaluaciones/{usuarioId}(usuarioId=${usuarioId})}">
+             th:href="@{/alumno/evaluaciones/{userId}(userId=${userId})}">
             <i class="fas fa-clipboard-check"></i><span>Evaluaciones</span>
           </a>
           <a class="nav-link flex items-center gap-2"
-             th:href="@{/alumno/explorar/{usuarioId}(usuarioId=${usuarioId})}">
+             th:href="@{/alumno/explorar/{userId}(userId=${userId})}">
             <i class="fas fa-search"></i><span>Explorar</span>
           </a>
         </div>
@@ -102,7 +102,7 @@
             </button>
             <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 hidden group-hover:block">
               <a class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                 th:href="@{/alumno/perfil/{usuarioId}(usuarioId=${usuarioId})}">
+                 th:href="@{/alumno/profile/{userId}(userId=${userId})}">
                 <i class="fas fa-user-circle mr-2"></i>Perfil
               </a>
               <a href="#" class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -139,13 +139,13 @@
           <a th:href="@{/alumno/home}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <i class="fas fa-home"></i><span>Inicio</span>
           </a>
-          <a th:href="@{/alumno/perfil/{usuarioId}(usuarioId=${usuarioId})}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+          <a th:href="@{/alumno/profile/{userId}(userId=${userId})}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <i class="fas fa-user"></i><span>Perfil</span>
           </a>
-          <a th:href="@{/alumno/evaluaciones/{usuarioId}(usuarioId=${usuarioId})}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+          <a th:href="@{/alumno/evaluaciones/{userId}(userId=${userId})}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <i class="fas fa-clipboard-check"></i><span>Evaluaciones</span>
           </a>
-          <a th:href="@{/alumno/explorar/{usuarioId}(usuarioId=${usuarioId})}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+          <a th:href="@{/alumno/explorar/{userId}(userId=${userId})}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <i class="fas fa-search"></i><span>Explorar</span>
           </a>
         </nav>
@@ -176,17 +176,17 @@
 
     <section class="animate-fade-in">
       <h1 class="text-2xl font-bold mb-2">Bienvenido(a), <span th:text="${usuarioNombre} ?: 'Alumno'">Alumno</span></h1>
-      <p class="text-sm opacity-70 mb-6" th:text="'ID: ' + ${usuarioId}">ID:</p>
+      <p class="text-sm opacity-70 mb-6" th:text="'ID: ' + ${userId}">ID:</p>
 
       <!-- aquí tu contenido -->
       <div class="grid md:grid-cols-3 gap-4">
-        <a th:href="@{/alumno/evaluaciones/{usuarioId}(usuarioId=${usuarioId})}" class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition">
+        <a th:href="@{/alumno/evaluaciones/{userId}(userId=${userId})}" class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition">
           <i class="fas fa-clipboard-check mr-2"></i> Ver Evaluaciones
         </a>
-        <a th:href="@{/alumno/perfil/{usuarioId}(usuarioId=${usuarioId})}" class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition">
+        <a th:href="@{/alumno/profile/{userId}(userId=${userId})}" class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition">
           <i class="fas fa-user mr-2"></i> Mi Perfil
         </a>
-        <a th:href="@{/alumno/explorar/{usuarioId}(usuarioId=${usuarioId})}" class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition">
+        <a th:href="@{/alumno/explorar/{userId}(userId=${userId})}" class="p-5 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-md transition">
           <i class="fas fa-search mr-2"></i> Explorar
         </a>
       </div>
