@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.zentry.sed.presentation.models.UsuarioDTO;
+import com.zentry.sed.presentation.models.dto.UsuarioDTO;
 import com.zentry.sed.services.usecases.RegisterUserService;
 
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.zentry.sed.presentation.models;
+package com.zentry.sed.presentation.models.dto;
 
 import java.time.LocalDateTime;
 

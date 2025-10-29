@@ -1,10 +1,14 @@
 package com.zentry.sed.presentation.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.zentry.sed.presentation.models.dto.UsuarioDTO;
+import com.zentry.sed.presentation.models.mappers.UsuarioMapper;
 import com.zentry.sed.services.exceptions.LoginUserException;
 import com.zentry.sed.services.usecases.LoginUserService;
 
@@ -34,7 +38,7 @@ public class LoginController {
     ) {
 
         try {
-            this.loginUserService.login(correo, password);
+            Optional<UsuarioDTO> usuarioDTO = this.loginUserService.login(correo , password).map(u -> UsuarioMapper.toDTO(u));
         } catch (LoginUserException e) {
             // TODO: handle exception
             model.addAttribute("msgErrorLogin", e.getMessage());
