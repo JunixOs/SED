@@ -1,0 +1,72 @@
+@startuml MapSite
+title Map Site - SED
+
+' Estilo opcional para hacerlo más legible
+skinparam rectangle {
+  BackgroundColor #E6F0FF
+  BorderColor #3366CC
+  FontColor black
+  FontStyle bold
+}
+
+rectangle "Home" as Home
+
+rectangle "Login" as Login
+
+rectangle "Estudiante" as EstudianteHomePage
+
+    rectangle "Evaluaciones Activas" as EvaluacionesActivas
+
+rectangle "Docente" as DocenteHomePage
+
+    rectangle "Dashboard Resultados\nde Evaluación" as DashboardDocente
+
+rectangle "Comisión" as ComisionHomePage
+
+    rectangle "Crear Periodo de Evaluacion" as CrearPeriodoEvalucacion
+    rectangle "Crear Evalucación Docente" as CrearEvaluacionDocente
+    rectangle "Administrar Usuarios" as AdministrarUsuarios
+
+        rectangle "Crear Usuarios" as CrearUsuarios
+
+    rectangle "Dashboard Resumen\nPeriodo" as DashboardComision
+
+rectangle "Sobre Nosotros" as SobreNosotros
+
+    rectangle "Equipo" as Equipo
+    rectangle "Visión" as Vision
+    rectangle "Misión" as Mision
+
+rectangle "Soporte Técnico" as SoporteTecnico
+
+' Subpáginas de Nosotros
+rectangle "Sobre Nosotros" as SobreNosotros
+
+' Subpáginas de Contacto
+
+Home -down-> Login
+Home -down-> SobreNosotros
+
+    SobreNosotros -down-> Equipo
+    SobreNosotros -down-> Vision
+    SobreNosotros -down-> Mision
+
+Home -down-> SoporteTecnico
+
+Login -down-> EstudianteHomePage
+Login -down-> DocenteHomePage
+Login -down-> ComisionHomePage
+
+EstudianteHomePage -down-> EvaluacionesActivas
+
+DocenteHomePage -down-> DashboardDocente
+
+ComisionHomePage -down-> CrearPeriodoEvalucacion
+ComisionHomePage -down-> CrearEvaluacionDocente
+ComisionHomePage -down-> AdministrarUsuarios
+
+    AdministrarUsuarios -down-> CrearUsuarios
+
+    ComisionHomePage -down-> DashboardComision
+
+@enduml

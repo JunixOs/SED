@@ -1,0 +1,191 @@
+Project "Sistema de Gestión Académica" {
+  database_type: "PostgreSQL"
+}
+
+/* =========================
+   Tablas principales (App)
+   ========================= */
+
+Table usuarios_usuario {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  correo varchar(254) [not null, unique]
+  rol_id uuid [not null, ref: > roles_rol.id]
+  password varchar(128) [not null]
+}
+
+Table roles_rol {
+  id uuid [pk, not null]
+  nombre varchar(50) [not null, unique]
+  permisos jsonb [not null]
+}
+
+Table alumnos_estudiante {
+  usuario_id uuid [pk, not null, ref: > usuarios_usuario.id]
+  semestre varchar(10) [not null]
+  carrera varchar(100) [not null]
+  codigo varchar(20) [unique]
+}
+
+Table docentes_docente {
+  usuario_id uuid [pk, not null, ref: > usuarios_usuario.id]
+  departamento varchar(100) [not null]
+}
+
+Table comision_comision {
+  usuario_id uuid [pk, not null, ref: > usuarios_usuario.id]
+  facultad varchar(100) [not null]
+}
+
+Table api_preferencianotificacion {
+  id uuid [pk, not null]
+  preferencias jsonb [not null]
+  usuario_id uuid [not null, unique, ref: > usuarios_usuario.id]
+}
+
+Table core_curso {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  codigo varchar(20) [not null, unique]
+  semestre varchar(10) [not null]
+  docente_id uuid [not null, ref: > docentes_docente.usuario_id]
+}
+
+Table core_matricula {
+  id uuid [pk, not null]
+  fecha_matricula timestamptz [not null]
+  estado varchar(20) [not null]
+  curso_id uuid [not null, ref: > core_curso.id]
+  estudiante_id uuid [not null, ref: > alumnos_estudiante.usuario_id]
+
+  Indexes {
+    (estudiante_id, curso_id) [unique, name: "core_matricula_estudiante_curso_uniq"]
+  }
+}
+
+Table evaluacion_modulopreguntas {
+  id_modulo uuid [pk, not null]
+  nombre varchar(100) [not null]
+}
+
+Table evaluacion_preguntamodulo {
+  id_pregunta uuid [pk, not null]
+  pregunta text [not null]
+  id_modulo_id uuid [not null, ref: > evaluacion_modulopreguntas.id_modulo]
+}
+
+Table evaluacion_evaluacion {
+  id uuid [pk, not null]
+  fecha timestamptz [not null]
+  estado varchar(20) [not null]
+  curso_id uuid [not null, ref: > core_curso.id]
+  estudiante_id uuid [not null, ref: > alumnos_estudiante.usuario_id]
+  docente_id uuid [ref: > docentes_docente.usuario_id]
+  comentario_general text
+
+  Indexes {
+    (estudiante_id, curso_id) [unique, name: "evaluacion_evaluacion_estudiante_curso_uniq"]
+  }
+}
+
+Table evaluacion_respuesta {
+  id uuid [pk, not null]
+  puntuacion int [not null]
+  criterio varchar(100)
+  evaluacion_id uuid [not null, ref: > evaluacion_evaluacion.id]
+  pregunta_id uuid [ref: > evaluacion_preguntamodulo.id_pregunta]
+}
+
+Table configuracion_parametro {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  valor varchar(200) [not null]
+}
+
+/* =========================
+   Tablas Django (Auth/Admin)
+   ========================= */
+
+Table django_content_type {
+  id int [pk, not null]
+  app_label varchar(100) [not null]
+  model varchar(100) [not null]
+
+  Indexes {
+    (app_label, model) [unique, name: "django_content_type_app_label_model_uniq"]
+  }
+}
+
+Table auth_permission {
+  id int [pk, not null]
+  name varchar(255) [not null]
+  content_type_id int [not null, ref: > django_content_type.id]
+  codename varchar(100) [not null]
+
+  Indexes {
+    (content_type_id, codename) [unique, name: "auth_permission_content_type_codename_uniq"]
+  }
+}
+
+Table auth_group {
+  id int [pk, not null]
+  name varchar(150) [not null, unique]
+}
+
+Table auth_group_permissions {
+  id bigint [pk, not null]
+  group_id int [not null, ref: > auth_group.id]
+  permission_id int [not null, ref: > auth_permission.id]
+
+  Indexes {
+    (group_id, permission_id) [unique, name: "auth_group_permissions_group_permission_uniq"]
+  }
+}
+
+Table auth_user {
+  id int [pk, not null]
+  password varchar(128) [not null]
+  last_login timestamptz
+  is_superuser boolean [not null]
+  username varchar(150) [not null, unique]
+  first_name varchar(150) [not null]
+  last_name varchar(150) [not null]
+  email varchar(254) [not null]
+  is_staff boolean [not null]
+  is_active boolean [not null]
+  date_joined timestamptz [not null]
+}
+
+Table auth_user_groups {
+  id bigint [pk, not null]
+  user_id int [not null, ref: > auth_user.id]
+  group_id int [not null, ref: > auth_group.id]
+
+  Indexes {
+    (user_id, group_id) [unique, name: "auth_user_groups_user_group_uniq"]
+  }
+}
+
+Table auth_user_user_permissions {
+  id bigint [pk, not null]
+  user_id int [not null, ref: > auth_user.id]
+  permission_id int [not null, ref: > auth_permission.id]
+
+  Indexes {
+    (user_id, permission_id) [unique, name: "auth_user_user_permissions_user_permission_uniq"]
+  }
+}
+
+Table django_admin_log {
+  id int [pk, not null]
+  action_time timestamptz [not null]
+  object_id text
+  object_repr varchar(200) [not null]
+  action_flag smallint [not null]
+  change_message text [not null]
+  content_type_id int [ref: > django_content_type.id]
+  user_id int [not null, ref: > auth_user.id]
+}
+
+
+

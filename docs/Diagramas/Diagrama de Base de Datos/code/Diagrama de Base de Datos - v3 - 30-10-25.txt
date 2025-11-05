@@ -1,0 +1,312 @@
+Project "SistemaDeEvaluacionDocente_Redisenado" {
+  database_type: "PostgreSQL"
+}
+
+/* =========================
+   Identidad y Seguridad
+   ========================= */
+
+Table Usuario {
+  idUsuario uuid [pk, not null]
+  nombreCompleto varchar(100) [not null]
+  correo varchar(254) [not null, unique]
+  contrasenaHash varchar(128) [not null]
+  idEstadoUsuario uuid [not null, ref: > EstadoUsuario.idEstadoUsuario]
+  creadoEn timestamptz
+  actualizadoEn timestamptz
+}
+
+Table EstadoUsuario {
+  idEstadoUsuario uuid [pk, not null]
+  codigo varchar(30) [not null, unique] // ACTIVO, BLOQUEADO
+  etiqueta varchar(50)
+}
+
+Table Rol {
+  idRol uuid [pk, not null]
+  nombre varchar(50) [not null, unique]
+}
+
+Table Permiso {
+  idPermiso uuid [pk, not null]
+  codigo varchar(100) [not null, unique]
+  descripcion varchar(255)
+}
+
+Table RolPermiso {
+  idRolPermiso uuid [pk, not null]
+  idRol uuid [not null, ref: > Rol.idRol]
+  idPermiso uuid [not null, ref: > Permiso.idPermiso]
+
+  Indexes {
+    (idRol, idPermiso) [unique, name: "RolPermiso_UQ"]
+  }
+}
+
+Table UsuarioRol {
+  idUsuarioRol uuid [pk, not null]
+  idUsuario uuid [not null, ref: > Usuario.idUsuario]
+  idRol uuid [not null, ref: > Rol.idRol]
+
+  Indexes {
+    (idUsuario, idRol) [unique, name: "UsuarioRol_UQ"]
+  }
+}
+
+/* =========================
+   Académico
+   ========================= */
+
+Table Estudiante {
+  idEstudiante uuid [pk, not null]
+  idUsuario uuid [not null, unique, ref: > Usuario.idUsuario]
+  semestre varchar(10) [not null]
+  carrera varchar(100) [not null]
+  codigoEstudiante varchar(20) [unique]
+}
+
+Table Docente {
+  idDocente uuid [pk, not null]
+  idUsuario uuid [not null, unique, ref: > Usuario.idUsuario]
+  departamento varchar(100) [not null]
+  antiguedad int
+  gradoAcademico varchar(100)
+}
+
+Table Curso {
+  idCurso uuid [pk, not null]
+  nombre varchar(100) [not null]
+  codigo varchar(20) [not null, unique]
+  facultad varchar(100)
+  creditos int
+}
+
+Table Periodo {
+  idPeriodo uuid [pk, not null]
+  anio int [not null]
+  termino varchar(20) [not null] // 2025-I
+  fechaInicio date
+  fechaFin date
+  idEstadoPeriodo uuid [not null, ref: > EstadoPeriodo.idEstadoPeriodo]
+
+  Indexes {
+    (anio, termino) [unique, name: "Periodo_Anio_Termino_UQ"]
+  }
+}
+
+Table EstadoPeriodo {
+  idEstadoPeriodo uuid [pk, not null]
+  codigo varchar(30) [not null, unique]  // PLANIFICADO, ABIERTO, CERRADO, PUBLICADO
+  etiqueta varchar(50)
+}
+
+Table Seccion {
+  idSeccion uuid [pk, not null]
+  idCurso uuid [not null, ref: > Curso.idCurso]
+  idPeriodo uuid [not null, ref: > Periodo.idPeriodo]
+  codigoSeccion varchar(20)
+  idModalidadSeccion uuid [not null, ref: > ModalidadSeccion.idModalidadSeccion]
+  idDocenteTitular uuid [ref: > Docente.idDocente]
+
+  Indexes {
+    (idCurso, idPeriodo, codigoSeccion) [unique, name: "Seccion_Curso_Periodo_Codigo_UQ"]
+  }
+}
+
+Table ModalidadSeccion {
+  idModalidadSeccion uuid [pk, not null]
+  codigo varchar(30) [not null, unique] // PRESENCIAL, VIRTUAL
+  etiqueta varchar(50)
+}
+
+Table Matricula {
+  idMatricula uuid [pk, not null]
+  fechaMatricula timestamptz [not null]
+  idEstadoMatricula uuid [not null, ref: > EstadoMatricula.idEstadoMatricula]
+  idSeccion uuid [not null, ref: > Seccion.idSeccion]
+  idEstudiante uuid [not null, ref: > Estudiante.idEstudiante]
+
+  Indexes {
+    (idEstudiante, idSeccion) [unique, name: "Matricula_Estudiante_Seccion_UQ"]
+  }
+}
+
+Table EstadoMatricula {
+  idEstadoMatricula uuid [pk, not null]
+  codigo varchar(30) [not null, unique] // VIGENTE, RETIRADO
+  etiqueta varchar(50)
+}
+
+/* =========================
+   Instrumentos de Evaluación
+   ========================= */
+
+Table Criterio {
+  idCriterio uuid [pk, not null]
+  nombre varchar(100) [not null]
+  descripcion text
+}
+
+Table Instrumento {
+  idInstrumento uuid [pk, not null]
+  nombre varchar(100) [not null]
+  idPeriodo uuid [ref: > Periodo.idPeriodo]
+  version int [not null]
+  vigente boolean [not null, default: true]
+  creadoEn timestamptz
+
+  Indexes {
+    (nombre, version) [unique, name: "Instrumento_Nombre_Version_UQ"]
+  }
+}
+
+Table Modulo {
+  idModulo uuid [pk, not null]
+  idInstrumento uuid [not null, ref: > Instrumento.idInstrumento]
+  nombre varchar(100) [not null]
+  orden int
+  peso numeric(6,3)
+}
+
+Table Pregunta {
+  idPregunta uuid [pk, not null]
+  idModulo uuid [not null, ref: > Modulo.idModulo]
+  idCriterio uuid [ref: > Criterio.idCriterio]
+  enunciado text [not null]
+  orden int
+  peso numeric(6,3)
+}
+
+Table Escala {
+  idEscala uuid [pk, not null]
+  nombre varchar(100) [not null]
+}
+
+Table OpcionEscala {
+  idOpcionEscala uuid [pk, not null]
+  idEscala uuid [not null, ref: > Escala.idEscala]
+  valor int [not null]
+  etiqueta varchar(50) [not null]
+
+  Indexes {
+    (idEscala, valor) [unique, name: "OpcionEscala_Escala_Valor_UQ"]
+  }
+}
+
+Table InstrumentoEscala {
+  idInstrumentoEscala uuid [pk, not null]
+  idInstrumento uuid [not null, ref: > Instrumento.idInstrumento]
+  idEscala uuid [not null, ref: > Escala.idEscala]
+
+  Indexes {
+    (idInstrumento, idEscala) [unique, name: "InstrumentoEscala_UQ"]
+  }
+}
+
+/* =========================
+   Evaluaciones / Respuestas
+   ========================= */
+
+Table EstadoEvaluacion {
+  idEstadoEvaluacion uuid [pk, not null]
+  codigo varchar(30) [not null, unique]  // ABIERTA, CERRADA, ANULADA
+  etiqueta varchar(50)
+}
+
+Table Canal {
+  idCanal uuid [pk, not null]
+  codigo varchar(20) [not null, unique]  // WEB, MOVIL, KIOSCO
+  etiqueta varchar(50)
+}
+
+Table Evaluacion {
+  idEvaluacion uuid [pk, not null]
+  creadaEn timestamptz [not null]
+  idEstadoEvaluacion uuid [not null, ref: > EstadoEvaluacion.idEstadoEvaluacion]
+  idSeccion uuid [not null, ref: > Seccion.idSeccion]
+  idDocente uuid [not null, ref: > Docente.idDocente]
+  idInstrumento uuid [not null, ref: > Instrumento.idInstrumento]
+  idMatricula uuid [ref: > Matricula.idMatricula]     // no nula si no anónima
+  tokenAnonimo uuid [unique]
+  idCanal uuid [ref: > Canal.idCanal]
+  comentarioGeneral text
+}
+
+Table Respuesta {
+  idRespuesta uuid [pk, not null]
+  idEvaluacion uuid [not null, ref: > Evaluacion.idEvaluacion]
+  idPregunta uuid [not null, ref: > Pregunta.idPregunta]
+  valor int [not null]
+  comentario text
+
+  Indexes {
+    (idEvaluacion, idPregunta) [unique, name: "Respuesta_Evaluacion_Pregunta_UQ"]
+  }
+}
+
+/* =========================
+   Notificaciones y Auditoría
+   ========================= */
+
+Table TipoNotificacion {
+  idTipoNotificacion uuid [pk, not null]
+  codigo varchar(50) [not null, unique] // RECORDATORIO, RESULTADO, SISTEMA
+  etiqueta varchar(50)
+}
+
+Table PreferenciaNotificacion {
+  idPreferenciaNotificacion uuid [pk, not null]
+  idUsuario uuid [not null, unique, ref: > Usuario.idUsuario]
+  preferencias jsonb [not null]
+}
+
+Table Notificacion {
+  idNotificacion uuid [pk, not null]
+  idUsuario uuid [not null, ref: > Usuario.idUsuario]
+  idTipoNotificacion uuid [ref: > TipoNotificacion.idTipoNotificacion]
+  mensaje text [not null]
+  tipoEntidad varchar(50)
+  idEntidad uuid
+  leido boolean [not null, default: false]
+  fecha timestamptz [not null]
+}
+
+Table AccesoSistema {
+  idAccesoSistema uuid [pk, not null]
+  idUsuario uuid [not null, ref: > Usuario.idUsuario]
+  fechaAcceso timestamptz [not null]
+  direccionIP varchar(45)
+  userAgent text
+}
+
+Table LogAccion {
+  idLogAccion uuid [pk, not null]
+  idUsuario uuid [ref: > Usuario.idUsuario]
+  accion varchar(100) [not null]
+  entidad varchar(50)
+  idEntidad uuid
+  detalle text
+  fecha timestamptz [not null]
+}
+
+/* =========================
+   Comisión
+   ========================= */
+
+Table Comision {
+  idComision uuid [pk, not null]
+  idUsuario uuid [not null, ref: > Usuario.idUsuario]
+  facultad varchar(100) [not null]
+  idPeriodo uuid [ref: > Periodo.idPeriodo]
+  rolMiembro varchar(50)               // PRESIDENTE, MIEMBRO
+}
+
+/* =========================
+   Configuración
+   ========================= */
+
+Table Parametro {
+  idParametro uuid [pk, not null]
+  nombre varchar(100) [not null, unique]
+  valor varchar(200) [not null]
+}

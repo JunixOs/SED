@@ -1,0 +1,267 @@
+Project "Sistema de Evaluación Docente - Rediseñado" {
+  database_type: "PostgreSQL"
+}
+
+/* =========================
+   Identidad y Roles
+   ========================= */
+
+Table usuarios_usuario {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  correo varchar(254) [not null, unique]
+  rol_id uuid [not null, ref: > roles_rol.id]        // rol principal (puedes mantener)
+  password_hash varchar(128) [not null]              // guardar hash (bcrypt/argon2)
+  estado varchar(20)                                 // activo/bloqueado/etc.
+  creado_en timestamptz
+  actualizado_en timestamptz
+}
+
+Table roles_rol {
+  id uuid [pk, not null]
+  nombre varchar(50) [not null, unique]
+  // (ANTES tenía permisos jsonb; ahora se normaliza en tablas de abajo)
+}
+
+Table seguridad_permiso {
+  id uuid [pk, not null]
+  codigo varchar(100) [not null, unique]            // p.ej. EVL_VER_RESULTADOS
+  descripcion varchar(255)
+}
+
+Table seguridad_rol_permiso {
+  id uuid [pk, not null]
+  rol_id uuid [not null, ref: > roles_rol.id]
+  permiso_id uuid [not null, ref: > seguridad_permiso.id]
+
+  Indexes {
+    (rol_id, permiso_id) [unique, name: "seguridad_rol_permiso_uniq"]
+  }
+}
+
+/* =========================
+   Académico
+   ========================= */
+
+Table alumnos_estudiante {
+  usuario_id uuid [pk, not null, ref: > usuarios_usuario.id]
+  semestre varchar(10) [not null]
+  carrera varchar(100) [not null]
+  codigo varchar(20) [unique]
+}
+
+Table docentes_docente {
+  usuario_id uuid [pk, not null, ref: > usuarios_usuario.id]
+  departamento varchar(100) [not null]
+  antiguedad int
+  grado_academico varchar(100)
+}
+
+Table core_curso {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  codigo varchar(20) [not null, unique]
+  facultad varchar(100)
+  creditos int
+  // (QUITADO docente_id y semestre: ahora se maneja por secciones/periodos)
+}
+
+Table core_periodo {
+  id uuid [pk, not null]
+  anio int [not null]
+  term varchar(20) [not null]          // '2025-I', '2025-II', etc.
+  fecha_inicio date
+  fecha_fin date
+  estado varchar(20) [not null]        // PLANIFICADO/ABIERTO/CERRADO/PUBLICADO
+  Indexes {
+    (anio, term) [unique, name: "core_periodo_anio_term_uniq"]
+  }
+}
+
+Table core_seccion {
+  id uuid [pk, not null]
+  curso_id uuid [not null, ref: > core_curso.id]
+  periodo_id uuid [not null, ref: > core_periodo.id]
+  codigo_seccion varchar(20)           // p.ej. 'A', 'B1'
+  modalidad varchar(20)                // 'presencial','virtual'
+  docente_titular_id uuid [ref: > docentes_docente.usuario_id]
+
+  Indexes {
+    (curso_id, periodo_id, codigo_seccion) [unique, name: "core_seccion_curso_periodo_cod_uniq"]
+  }
+}
+
+Table core_matricula {
+  id uuid [pk, not null]
+  fecha_matricula timestamptz [not null]
+  estado varchar(20) [not null]
+  seccion_id uuid [not null, ref: > core_seccion.id]
+  estudiante_id uuid [not null, ref: > alumnos_estudiante.usuario_id]
+
+  Indexes {
+    (estudiante_id, seccion_id) [unique, name: "core_matricula_estudiante_seccion_uniq"]
+  }
+}
+
+/* =========================
+   Instrumento de evaluación (versionado)
+   ========================= */
+
+Table evaluacion_criterio {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  descripcion text
+}
+
+Table evaluacion_instrumento {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+  periodo_id uuid [ref: > core_periodo.id]          // opcional; NULL si es genérico
+  version int [not null]
+  vigente boolean [not null, default: true]
+  creado_en timestamptz
+}
+
+Table evaluacion_modulo {
+  id uuid [pk, not null]
+  instrumento_id uuid [not null, ref: > evaluacion_instrumento.id]
+  nombre varchar(100) [not null]
+  orden int
+  peso_modulo numeric(6,3)                          // opcional
+}
+
+Table evaluacion_pregunta {
+  id uuid [pk, not null]
+  modulo_id uuid [not null, ref: > evaluacion_modulo.id]
+  criterio_id uuid [ref: > evaluacion_criterio.id]  // opcional
+  enunciado text [not null]
+  orden int
+  peso_pregunta numeric(6,3)                        // opcional
+}
+
+Table evaluacion_escala {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null]
+}
+
+Table evaluacion_escala_opcion {
+  id uuid [pk, not null]
+  escala_id uuid [not null, ref: > evaluacion_escala.id]
+  valor int [not null]                               // p.ej. 1..5
+  etiqueta varchar(50) [not null]
+  Indexes {
+    (escala_id, valor) [unique, name: "escala_valor_uniq"]
+  }
+}
+
+Table evaluacion_instrumento_escala {
+  id uuid [pk, not null]
+  instrumento_id uuid [not null, ref: > evaluacion_instrumento.id]
+  escala_id uuid [not null, ref: > evaluacion_escala.id]
+
+  Indexes {
+    (instrumento_id, escala_id) [unique, name: "instrumento_escala_uniq"]
+  }
+}
+
+/* =========================
+   Encuestas / Respuestas
+   ========================= */
+
+Table evaluacion_evaluacion {
+  id uuid [pk, not null]
+  fecha timestamptz [not null]
+  estado varchar(20) [not null]                      // ABIERTA/EN_PROCESO/CERRADA/ANULADA
+  seccion_id uuid [not null, ref: > core_seccion.id]
+  docente_id uuid [not null, ref: > docentes_docente.usuario_id]
+  instrumento_id uuid [not null, ref: > evaluacion_instrumento.id]
+  estudiante_id uuid [ref: > alumnos_estudiante.usuario_id]  // NULL si anónimo
+  token_anonimo uuid [unique]                        // usado si anónimo
+  canal varchar(20)                                  // 'web','movil','kiosco'
+  comentario_general text
+
+  // Nota: En SQL real, la unicidad "condicional" (cuando estudiante_id no es NULL)
+  // se implementa con índice parcial. Aquí dejamos la intención:
+  Indexes {
+    (estudiante_id, seccion_id, docente_id, instrumento_id) [name: "eval_unica_por_estudiante_seccion_docente_instrumento"]
+  }
+}
+
+Table evaluacion_respuesta {
+  id uuid [pk, not null]
+  evaluacion_id uuid [not null, ref: > evaluacion_evaluacion.id]
+  pregunta_id uuid [not null, ref: > evaluacion_pregunta.id]
+  valor int [not null]
+  comentario text
+
+  Indexes {
+    (evaluacion_id, pregunta_id) [unique, name: "resp_unica_eval_pregunta_uniq"]
+  }
+}
+
+/* =========================
+   Notificaciones y Bitácoras
+   ========================= */
+
+Table api_preferencianotificacion {
+  id uuid [pk, not null]
+  preferencias jsonb [not null]
+  usuario_id uuid [not null, unique, ref: > usuarios_usuario.id]
+}
+
+Table api_notificacion {
+  id uuid [pk, not null]
+  usuario_id uuid [not null, ref: > usuarios_usuario.id]
+  tipo varchar(50)                     // 'recordatorio','resultado','sistema'
+  mensaje text [not null]
+  entity_tipo varchar(50)              // p.ej. 'evaluacion','seccion'
+  entity_id uuid
+  leido boolean [not null, default: false]
+  fecha timestamptz [not null]
+}
+
+Table api_accesosistema {
+  id uuid [pk, not null]
+  usuario_id uuid [not null, ref: > usuarios_usuario.id]
+  fecha_acceso timestamptz [not null]
+  direccion_ip varchar(45)
+  user_agent text
+}
+
+Table api_logaccion {
+  id uuid [pk, not null]
+  usuario_id uuid [ref: > usuarios_usuario.id]
+  accion varchar(100) [not null]       // p.ej. 'CREAR_EVALUACION'
+  entidad varchar(50)                  // 'evaluacion','pregunta'
+  entidad_id uuid
+  detalle text
+  fecha timestamptz [not null]
+}
+
+/* =========================
+   Comisión (gobernanza)
+   ========================= */
+
+Table comision_comision {
+  usuario_id uuid [pk, not null, ref: > usuarios_usuario.id]
+  facultad varchar(100) [not null]
+  periodo_id uuid [ref: > core_periodo.id]           // comisión vigente para un periodo
+  rol_miembro varchar(50)                            // 'presidente','miembro'
+}
+
+/* =========================
+   Configuración
+   ========================= */
+
+Table configuracion_parametro {
+  id uuid [pk, not null]
+  nombre varchar(100) [not null, unique]
+  valor varchar(200) [not null]
+}
+
+/* =========================
+   (Opcional) Tablas Django nativas
+   Mantener si tu app las usa. No modificadas.
+   ========================= */
+
+
