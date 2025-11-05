@@ -49,11 +49,13 @@ public class JpaUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("El usuario no tiene contraseña definida.");
         }
 
-        return new CustomUserDetails(
-            UUID.fromString(userFounded.getId()), // UUID del usuario
-            userFounded.getCorreo(),
-            userFounded.getPasswordHash(),
-            List.of(authority)
-        );
+        return User.withUsername(userFounded.getCorreo())
+                .password(passwordHash)
+                .authorities(List.of(authority))
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
     }
 }

@@ -30,7 +30,7 @@ public class AlumnoController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Principal class: " + auth.getPrincipal().getClass());
         System.out.println("Auth name: " + auth.getName());
-        
+
         return "alumno/dashboard";
     }
 
@@ -42,7 +42,7 @@ public class AlumnoController {
         model.addAttribute("cursosEvaluados", 3);
         model.addAttribute("cursosCount", 4);  */
         // esto se debe terminar tambien
-       
+        
         return "alumno/profile";
     }
 }
