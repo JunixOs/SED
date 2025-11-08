@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,20 +34,18 @@ public class RespuestaEntitiy {
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evaluacion_id")
+    @JoinColumn(name = "evaluacion_id" , nullable = false)
     private EvaluacionEntity evaluacion;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pregunta_id")
+    @JoinColumn(name = "pregunta_id" , nullable = false)
     private PreguntaEntity pregunta;
 
-    @NotNull(message = "Debe especificar un valor.")
+    @Column(name = "valor" , nullable = false)
     private Integer valor;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "comentario" , columnDefinition = "TEXT" , nullable = true)
     private String comentario;
 }

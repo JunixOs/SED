@@ -13,7 +13,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,13 +35,11 @@ public class RolPermisoEntity {
         )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rol_id")
+    @JoinColumn(name = "rol_id" , nullable = false)
     private RolEntity rol;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "permiso_id")
+    @JoinColumn(name = "permiso_id" , nullable = false)
     private PermisoEntity permiso;
 }

@@ -1,6 +1,8 @@
-package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
+package com.zentry.sed.infrasctucture.database.entities.module_usuarios;
 
 import java.util.UUID;
+
+import com.zentry.sed.infrasctucture.database.entities.module_roles.RolEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,28 +18,28 @@ import lombok.Setter;
 
 @Entity
 @Table(
-    name = "instrumento_escala" , 
+    name = "usuario_rol" , 
     indexes = {
-        @Index(name = "idx_instrumento_escala" , columnList = "instrumento_id,escala_id" , unique = true)
+        @Index(name = "idx_usuario_rol" , columnList = "usuario_id,rol_id" , unique = true)
     }
 )
 @Getter
 @Setter
-public class InstrumentoEscalaEntity {
-    
+public class UsuarioRolEntity {
+
     @Id
     @GeneratedValue
     @Column(
-        name = "id_instrumento_escala" , updatable = false , nullable = false , 
+        name = "id_usuario_rol", updatable = false, nullable = false,
         columnDefinition = "UUID DEFAULT gen_random_uuid()"
     )
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "instrumento_id" , nullable = false)
-    private InstrumentoEntity instrumento;
-    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "escala_id" , nullable = false)
-    private EscalaEntity escala;
+    @JoinColumn(name = "usuario_id" , nullable = false)
+    private UsuarioEntity usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rol_id" , nullable = false)
+    private RolEntity rol;
 }

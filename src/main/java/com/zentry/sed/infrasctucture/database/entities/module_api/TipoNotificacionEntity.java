@@ -1,4 +1,4 @@
-package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
+package com.zentry.sed.infrasctucture.database.entities.module_api;
 
 import java.util.UUID;
 
@@ -12,20 +12,23 @@ import lombok.Setter;
 
 @Entity
 @Table(
-    name = "escala"
+    name = "tipo_notificacion"
 )
 @Getter
 @Setter
-public class EscalaEntity {
+public class TipoNotificacionEntity {
     
     @Id
     @GeneratedValue
     @Column(
-        name = "id_escala" , updatable = false , nullable = false , 
+        name = "id_tipo_notificacion", updatable = false, nullable = false,
         columnDefinition = "UUID DEFAULT gen_random_uuid()"
     )
     private UUID id;
 
-    @Column(name = "nombre" , length = 100 , nullable = false)
-    private String nombre;
+    @Column(name = "codigo" , length = 50 , nullable = false)
+    private String codigo;
+
+    @Column(name = "etiqueta" , length = 50 , nullable = true)
+    private String etiqueta;
 }

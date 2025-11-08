@@ -38,21 +38,18 @@ public class MatriculaEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe especificar una fecha de matricula.")
-    @Column(name = "fecha_matricula" , columnDefinition = "TIMESTAMP")
+    @Column(name = "fecha_matricula" , columnDefinition = "TIMESTAMP" , nullable = false)
     private LocalDateTime fechaMatricula;
 
     @NotNull(message = "Debe especificar un estado.")
     @Size(max = 20 , message = "El estado debe tener menos de 20 caracteres.")
-    private String estado;
+    private EstadoMatriculaEntity estadoMatricula;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seccion_id")
+    @JoinColumn(name = "seccion_id" , nullable = false)
     private SeccionEntity seccion;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id")
+    @JoinColumn(name = "estudiante_id" , nullable = false)
     private EstudianteEntity estudiante;
 }

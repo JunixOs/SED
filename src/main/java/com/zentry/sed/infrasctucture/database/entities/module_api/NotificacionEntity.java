@@ -14,8 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,30 +33,26 @@ public class NotificacionEntity {
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario" , nullable = false)
     private UsuarioEntity usuario;
 
-    @Size(max = 50 , message = "El tipo debe ser menor a 50 caracteres.")
+    @Column(name = "tipo" , length = 50 , nullable = true)
     private String tipo;
 
-    @NotNull
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "mensaje" , columnDefinition = "TEXT" , nullable = false)
     private String mensaje;
 
-    @Size(max = 50 , message = "el tipo de entidad debe ser menor a 50 caracteres.")
-    @Column(name = "entity_tipo")
-    private String entityTipo;
+    @Column(name = "tipo_entidad" , length = 50 , nullable = true)
+    private String tipoEntidad;
 
-    @Column(name = "entity_id")
-    private UUID entityId;
+    @Column(name = "id_entidad" , nullable = true)
+    private UUID idEntidad;
     
-    @NotNull
+    @Column(name = "leido" , nullable = false)
     private Boolean leido = false;
 
-    @NotNull(message = "Debe proporcionar una fecha.")
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(name = "fecha" , columnDefinition = "TIMESTAMP" , nullable = false)
     private LocalDateTime fecha;
 }

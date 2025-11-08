@@ -13,8 +13,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,24 +35,21 @@ public class SeccionEntity {
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "curso_id")
+    @JoinColumn(name = "curso_id" , nullable = false)
     private CursoEntity curso;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodo_id")
+    @JoinColumn(name = "periodo_id" , nullable = false)
     private PeriodoEntity periodo;
     
-    @Size(max = 20 , message = "El codigo debe tener menos de 20 caracteres.")
-    @Column(name = "codigo_seccion")
+    @Column(name = "codigo_seccion" , length = 20 , nullable = true)
     private String codigoSeccion;
     
-    @Size(max = 20 , message = "La modalidad debe tener menos de 20 caracteres.")
-    private String modalidad;
+    @Column(name = "id_modalidad_seccion" , length = 20 , nullable = false)
+    private ModalidadSeccionEntity modalidad;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "docente_titular_id")
+    @JoinColumn(name = "docente_titular_id" , nullable = true)
     private DocenteEntity docente;
 }

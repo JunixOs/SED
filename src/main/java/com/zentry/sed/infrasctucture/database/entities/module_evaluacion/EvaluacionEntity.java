@@ -3,7 +3,7 @@ package com.zentry.sed.infrasctucture.database.entities.module_evaluacion;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.zentry.sed.infrasctucture.database.entities.module_alumnos.EstudianteEntity;
+import com.zentry.sed.infrasctucture.database.entities.module_core.MatriculaEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_core.SeccionEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_docentes.DocenteEntity;
 
@@ -12,22 +12,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
-    name = "evaluacion" , 
-    indexes = {
-        @Index(name = "idx_evaluacion" , columnList = "estudiante_id,seccion_id,docente_id,instrumento_id" , unique = true)
-    }
+    name = "evaluacion"
 )
 @Getter
 @Setter
@@ -41,40 +35,37 @@ public class EvaluacionEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe especificar una fecha.")
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime fecha;
+    @Column(name = "creada_en" , columnDefinition = "TIMESTAMP" , nullable = false)
+    private LocalDateTime creadaEn;
 
-    @NotNull(message = "Debe especificar un estado")
-    @Size(max = 20 , message = "El estado debe tener menos de 20 caracteres.")
-    private String estado;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seccion_id")
+    @JoinColumn(name = "estado_evaluacion_id" , nullable = false)
+    private EstadoEvaluacionEntity estadoEvaluacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seccion_id" , nullable = false)
     private SeccionEntity seccion;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "docente_id")
+    @JoinColumn(name = "docente_id" , nullable = false)
     private DocenteEntity docente;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instrumento_id")
+    @JoinColumn(name = "instrumento_id" , nullable = false)
     private InstrumentoEntity instrumento;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id")
-    private EstudianteEntity estudiante;
+    @JoinColumn(name = "matricula_id" , nullable = true)
+    private MatriculaEntity matricula;
 
-    @Column(name = "token_anonimo")
+    @Column(name = "token_anonimo" , nullable = true)
     private UUID tokenAnonimo;
 
-    @Size(max = 20 , message = "El canal debe tener menos de 20 caracteres.")
-    private String canal;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "canal_id" , nullable = true)
+    private CanalEntity canal;
 
     @Lob
-    @Column(name = "comentario_general" , columnDefinition = "TEXT")
+    @Column(name = "comentario_general" , columnDefinition = "TEXT" , nullable = true)
     private String comentarioGeneral;
 }

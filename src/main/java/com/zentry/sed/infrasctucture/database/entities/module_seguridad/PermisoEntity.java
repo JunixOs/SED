@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,10 +26,9 @@ public class PermisoEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe proporcionar un codigo.")
-    @Size(max = 100 , message = "El codigo debe tener menos de 100 caracteres.")
+    @Column(name = "codigo" , length = 100 , nullable = false)
     private String codigo;
 
-    @Size(max = 255 , message = "La descripcion debe tener menos de 255 caracteres.")
+    @Column(name = "descripcion" , length = 255 , nullable = true)
     private String descripcion;
 }

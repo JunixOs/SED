@@ -14,8 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,24 +34,22 @@ public class LogAccionEntity {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario-id")
+    @JoinColumn(name = "usuario_id" , nullable = true)
     private UsuarioEntity usuario;
 
-    @NotNull(message = "Debe especificar una accion.")
-    @Size(max = 100 , message = "La accion debe tener menos de 100 caracteres.")
+    @Column(name = "accion" , nullable = false , length = 100)
     private String accion;
 
-    @Size(max = 50 , message = "La entidad debe tener menos de 50 caracteres.")
+    @Column(name = "entidad" , nullable = true , length = 50)
     private String entidad;
 
-    @Column(name = "entidad_id")
+    @Column(name = "entidad_id" , nullable = true)
     private UUID entidadId;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "detalle" , columnDefinition = "TEXT" , nullable = true)
     private String detalle;
 
-    @NotNull(message = "Debe especificar una fecha.")
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(name = "fecha" , columnDefinition = "TIMESTAMP" , nullable = false)
     private LocalDateTime fecha;
 }

@@ -7,13 +7,11 @@ import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEn
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,20 +24,23 @@ import lombok.Setter;
 public class DocenteEntity {
     
     @Id
+    @GeneratedValue
+    @Column(
+        name = "id_docente", updatable = false, nullable = false,
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "usuario_id" , nullable = false)
     private UsuarioEntity usuario;
 
-    @NotNull(message = "Debe proporcionar un departamento.")
-    @Size(max = 100 , message = "El departamento debe tener menos de 100 caracteres.")
+    @Column(name = "departamento" , length = 100 , nullable = false)
     private String departamento;
 
+    @Column(name = "antiguedad" , nullable = true)
     private Integer antiguedad;
 
-    @Size(max = 100 , message = "El grado academico debe tener menos de 100 caracteres.")
-    @Column(name = "grado_academico")
+    @Column(name = "grado_academico" , length = 100 , nullable = true)
     private String gradoAcademico;
 }

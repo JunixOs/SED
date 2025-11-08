@@ -6,31 +6,29 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
-    name = "criterio"
+    name = "estado_evaluacion"
 )
 @Getter
 @Setter
-public class CriterioEntity {
+public class EstadoEvaluacionEntity {
     
     @Id
     @GeneratedValue
     @Column(
-        name = "id_criterio" , updatable = false , nullable = false , 
+        name = "id_estado_evaluacion", updatable = false, nullable = false,
         columnDefinition = "UUID DEFAULT gen_random_uuid()"
     )
     private UUID id;
 
-    @Column(name = "nombre" , length = 100 , nullable = false)
-    private String nombre;
+    @Column(name = "codigo" , length = 30 , nullable = false)
+    private String codigo;
 
-    @Lob
-    @Column(name = "descripcion" , columnDefinition = "TEXT" , nullable = true)
-    private String descripcion;
+    @Column(name = "etiqueta" , length = 50 , nullable = true)
+    private String etiqueta;
 }

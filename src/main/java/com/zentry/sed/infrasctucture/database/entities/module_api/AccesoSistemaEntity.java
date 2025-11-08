@@ -14,8 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,20 +33,17 @@ public class AccesoSistemaEntity {
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id" , nullable = false)
     private UsuarioEntity usuario;
 
-    @NotNull(message = "Debe proporcionar una fecha de acceso.")
-    @Column(name = "fecha_acceso" , columnDefinition = "TIMESTAMP")
+    @Column(name = "fecha_acceso" , columnDefinition = "TIMESTAMP" , nullable = false)
     private LocalDateTime fechaAcceso;
 
-    @Size(max = 45 , message = "La direccion IP debe tener menos de 45 caracteres.")
-    @Column(name = "direccion_ip")
+    @Column(name = "direccion_ip" , nullable = true , length = 45)
     private String direccionIp;
 
     @Lob
-    @Column(name = "user_agent" , columnDefinition = "TEXT")
+    @Column(name = "user_agent" , columnDefinition = "TEXT" , nullable = true)
     private String userAgent;
 }

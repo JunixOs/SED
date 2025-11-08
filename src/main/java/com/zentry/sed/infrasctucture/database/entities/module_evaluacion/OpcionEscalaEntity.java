@@ -11,37 +11,33 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Entity
 @Table(
-    name = "escala_opcion" , 
+    name = "opcion_escala" , 
     indexes = {
-        @Index(name = "idx_escala_opcion" , columnList = "escala_id,valor" , unique = true)
+        @Index(name = "idx_opcion_escala" , columnList = "escala_id,valor" , unique = true)
     }
 )
 @Getter
-public class EscalaOpcionEntity {
+public class OpcionEscalaEntity {
     
     @Id
     @GeneratedValue
     @Column(
-        name = "id_escala_opcion" , updatable = false , nullable = false , 
+        name = "id_opcion_escala" , updatable = false , nullable = false , 
         columnDefinition = "UUID DEFAULT gen_random_uuid()"
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "escala_id")
+    @JoinColumn(name = "escala_id" , nullable = false)
     private EscalaEntity escala;
 
-    @NotNull(message = "Debe proporcionar un valor.")
+    @Column(name = "valor" , nullable = false)
     private Integer valor;
 
-    @NotNull(message = "Debe proporcionar una etiqueta.")
-    @Size(max = 50 , message = "La etiqueta debe tener menos de 50 caracteres.")
+    @Column(name = "etiqueta" , nullable = false , length = 50)
     private String etiqueta;
 }

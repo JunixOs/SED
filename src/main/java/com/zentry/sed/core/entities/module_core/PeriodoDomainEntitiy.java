@@ -3,10 +3,19 @@ package com.zentry.sed.core.entities.module_core;
 import java.time.LocalDate;
 
 public class PeriodoDomainEntitiy {
+    private String id;
     private Integer anio;
-    private String term;
+    private String termino;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
+    private EstadoPeriodoDomainEntity estadoPeriodoDomainEntity;
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Integer getAnio() {
         return anio;
@@ -15,11 +24,11 @@ public class PeriodoDomainEntitiy {
         this.anio = anio;
     }
 
-    public String getTerm() {
-        return term;
+    public String getTermino() {
+        return termino;
     }
-    public void setTerm(String term) {
-        this.term = term;
+    public void setTermino(String termino) {
+        this.termino = termino;
     }
 
     public LocalDate getFechaInicio() {
@@ -34,5 +43,12 @@ public class PeriodoDomainEntitiy {
     }
     public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public EstadoPeriodoDomainEntity getEstadoPeriodoDomainEntity() {
+        return estadoPeriodoDomainEntity;
+    }
+    public void setEstadoPeriodoDomainEntity(EstadoPeriodoDomainEntity estadoPeriodoDomainEntity) {
+        this.estadoPeriodoDomainEntity = estadoPeriodoDomainEntity;
     }
 }
