@@ -1,12 +1,12 @@
 package com.zentry.sed.infrasctucture.database.mappers.module_core;
 
-import com.zentry.sed.core.entities.module_core.PeriodoDomainEntitiy;
+import com.zentry.sed.core.entities.module_core.PeriodoDomainEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_core.EstadoPeriodoEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_core.PeriodoEntity;
 
 public class PeriodoMapper {
     public static PeriodoEntity toEntity(
-        PeriodoDomainEntitiy periodoDomainEntitiy , 
+        PeriodoDomainEntity periodoDomainEntitiy , 
         EstadoPeriodoEntity estadoPeriodoEntity
     ){
         PeriodoEntity periodoEntity = new PeriodoEntity();
@@ -20,8 +20,8 @@ public class PeriodoMapper {
         return periodoEntity;
     }
 
-    public static PeriodoDomainEntitiy toDomain(PeriodoEntity periodoEntity){
-        PeriodoDomainEntitiy periodoDomainEntitiy = new PeriodoDomainEntitiy();
+    public static PeriodoDomainEntity toDomain(PeriodoEntity periodoEntity){
+        PeriodoDomainEntity periodoDomainEntitiy = new PeriodoDomainEntity();
 
         periodoDomainEntitiy.setId(periodoEntity.getId().toString());
         periodoDomainEntitiy.setAnio(periodoEntity.getAnio());

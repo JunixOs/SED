@@ -16,6 +16,7 @@ public class EstadoUsuarioMapper {
     public static EstadoUsuarioDomainEntity toDomain(EstadoUsuarioEntity estadoUsuarioEntity){
         EstadoUsuarioDomainEntity estadoUsuarioDomainEntity = new EstadoUsuarioDomainEntity();
 
+        estadoUsuarioDomainEntity.setId(estadoUsuarioEntity.getId().toString());
         estadoUsuarioDomainEntity.setCodigo(estadoUsuarioEntity.getCodigo());
         estadoUsuarioDomainEntity.setEtiqueta(estadoUsuarioEntity.getEtiqueta());
 

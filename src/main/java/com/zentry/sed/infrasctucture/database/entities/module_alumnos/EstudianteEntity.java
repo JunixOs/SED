@@ -41,6 +41,6 @@ public class EstudianteEntity {
     @Column(name = "carrera" , length = 100 , nullable = false)
     private String carrera;
 
-    @Column(name = "codigo" , length = 20 , nullable = true)
-    private String codigo;
+    @Column(name = "codigo_estudiante" , length = 20 , nullable = true , unique = true)
+    private String codigoEstudiante;
 }

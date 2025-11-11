@@ -29,7 +29,7 @@ public class CursoEntity {
     @Column(name = "nombre" , length = 100 , nullable = false)
     private String nombre;
 
-    @Column(name = "codigo" , length = 20 , nullable = false)
+    @Column(name = "codigo" , length = 20 , nullable = false , unique = true)
     private String codigo;
 
     @Column(name = "facultad" , length = 100 , nullable = true)

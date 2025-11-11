@@ -9,18 +9,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
     name = "seccion" , 
-    indexes = {
-        @Index(name = "idx_seccion" , columnList = "curso_id,periodo_id,codigo_seccion" , unique = true)
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "Seccion_Curso_Periodo_Codigo_UQ" , 
+            columnNames = {"curso_id" , "periodo_id" , "codigo_seccion"} 
+        )
     }
 )
 @Getter
@@ -46,7 +49,8 @@ public class SeccionEntity {
     @Column(name = "codigo_seccion" , length = 20 , nullable = true)
     private String codigoSeccion;
     
-    @Column(name = "id_modalidad_seccion" , length = 20 , nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_modalidad_seccion" , nullable = false)
     private ModalidadSeccionEntity modalidad;
     
     @ManyToOne(fetch = FetchType.LAZY)

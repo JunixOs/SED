@@ -41,4 +41,20 @@ public class ComisionDomainEntity {
     public void setRolMiembro(String rolMiembro) {
         this.rolMiembro = rolMiembro;
     }
+
+    public static ComisionDomainEntity create(
+        String usuarioId,
+        String facultad,
+        String periodoId,
+        String rolMiembro
+    ){
+        ComisionDomainEntity comisionDomainEntity = new ComisionDomainEntity();
+
+        comisionDomainEntity.setUsuarioId(usuarioId);
+        comisionDomainEntity.setFacultad(facultad);
+        comisionDomainEntity.setPeriodoId(periodoId);
+        comisionDomainEntity.setRolMiembro(rolMiembro);
+
+        return comisionDomainEntity;
+    }
 }

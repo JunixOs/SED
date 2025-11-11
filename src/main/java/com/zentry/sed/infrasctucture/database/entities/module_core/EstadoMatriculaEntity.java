@@ -7,11 +7,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(
     name = "estado_matricula"
 )
+@Getter
+@Setter
 public class EstadoMatriculaEntity {
     
     @Id
@@ -22,7 +26,7 @@ public class EstadoMatriculaEntity {
     )
     private UUID id;
 
-    @Column(name = "codigo" , length = 30 , nullable = false)
+    @Column(name = "codigo" , length = 30 , nullable = false , unique = true)
     private String codigo;
 
     @Column(name = "etiqueta" , length = 50 , nullable = true)

@@ -7,16 +7,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
     name = "periodo" , 
-    indexes = {
-        @Index(name = "idx_periodo" , columnList = "anio,termino" , unique = true)
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "Periodo_Anio_Termino_UQ" , 
+            columnNames = {"anio" , "termino"}
+        )
     }
 )
 @Getter

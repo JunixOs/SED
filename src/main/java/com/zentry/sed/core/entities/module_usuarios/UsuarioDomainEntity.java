@@ -59,4 +59,24 @@ public class UsuarioDomainEntity {
     public void setActualizadoEn(LocalDateTime actualizadoEn) {
         this.actualizadoEn = actualizadoEn;
     }
+
+    public static UsuarioDomainEntity create(
+        String nombreCompleto,
+        String correo,
+        String passwordHash,
+        EstadoUsuarioDomainEntity estadoUsuarioDomainEntity
+    ){
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        UsuarioDomainEntity usuarioDomainEntity = new UsuarioDomainEntity();
+
+        usuarioDomainEntity.setNombreCompleto(nombreCompleto);
+        usuarioDomainEntity.setCorreo(correo);
+        usuarioDomainEntity.setPasswordHash(passwordHash);
+        usuarioDomainEntity.setEstadoUsuarioDomainEntity(estadoUsuarioDomainEntity);
+        usuarioDomainEntity.setCreadoEn(nowDateTime);
+        usuarioDomainEntity.setActualizadoEn(nowDateTime);
+
+        return usuarioDomainEntity;
+    }
 }
