@@ -10,20 +10,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
     name = "matricula" , 
-    indexes = {
-        @Index(name = "idx_matricula" , columnList = "estudiante_id,seccion_id" , unique = true)
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "Matricula_Estudiante_Seccion_UQ" ,
+            columnNames =  {"estudiante_id" , "seccion_id"}
+        )
     }
 )
 @Getter
@@ -38,21 +39,18 @@ public class MatriculaEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe especificar una fecha de matricula.")
-    @Column(name = "fecha_matricula" , columnDefinition = "TIMESTAMP")
+    @Column(name = "fecha_matricula" , columnDefinition = "TIMESTAMP" , nullable = false)
     private LocalDateTime fechaMatricula;
 
-    @NotNull(message = "Debe especificar un estado.")
-    @Size(max = 20 , message = "El estado debe tener menos de 20 caracteres.")
-    private String estado;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seccion_id")
+    @JoinColumn(name = "estado_matricula_id" , nullable = false)
+    private EstadoMatriculaEntity estadoMatricula;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seccion_id" , nullable = false)
     private SeccionEntity seccion;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id")
+    @JoinColumn(name = "estudiante_id" , nullable = false)
     private EstudianteEntity estudiante;
 }

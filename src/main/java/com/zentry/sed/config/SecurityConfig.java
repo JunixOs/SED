@@ -2,81 +2,55 @@ package com.zentry.sed.config;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.zentry.sed.services.JpaUserDetailsService;
+import com.zentry.sed.security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
-  @Autowired
-  private JpaUserDetailsService jpaUserDetailsService;
+  private final JwtAuthenticationFilter jwtAuthFilter;
+
+  public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter){
+      this.jwtAuthFilter = jwtAuthFilter;
+  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-      .csrf(csrf -> csrf.disable())
-
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/", "/login", "/error", "/favicon.ico",
-                         "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-        .requestMatchers("/comision/**").hasRole("COMISION")
-        .requestMatchers("/docente/**").hasRole("DOCENTE")
-        .requestMatchers("/alumno/**").hasRole("ALUMNO")
-        .requestMatchers("/admin/**").hasRole("ADMIN")
-        .anyRequest().authenticated()
-      )
-
-      .formLogin(form -> form
-        .loginPage("/login")
-        .usernameParameter("correo")
-        .passwordParameter("password")
-        // Fuerza ir SIEMPRE a /redirect al loguear (evita loop a /login guardado)
-        //.defaultSuccessUrl("/redirect", true)
-        .successHandler(customSuccessHandler())
-        .failureHandler(customFailureHandler())
-        .permitAll()
-      )
-
-      .rememberMe(Customizer.withDefaults())
-
-      .logout(logout -> logout
-        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-        .logoutSuccessUrl("/login?logout")
-        .invalidateHttpSession(true)
-        .clearAuthentication(true)
-        .deleteCookies("JSESSIONID")
-      );
-
-    return http.build();
+  @Bean AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+      return config.getAuthenticationManager();
   }
 
   @Bean
-  public AuthenticationFailureHandler customFailureHandler() {
-      return (request, response, exception) -> {
-          String errorMessage = "Correo o contraseña incorrectos";
-          request.getSession().setAttribute("errorMessage", errorMessage);
-          response.sendRedirect("/login?error=true");
-      };
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+      http
+              .csrf(csrf -> csrf.disable())
+              .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+              .authorizeHttpRequests(auth -> auth
+                      .requestMatchers("/api/{version}/module_usuarios/login", "/").permitAll()
+                      .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/webjars/**").permitAll()
+                      .requestMatchers("/api/{version}/module_usuarios/administrador/**").hasRole("ADMINISTRADOR")
+                      .requestMatchers("/api/{version}/module_usuarios/organizador/**").hasRole("ORGANIZADOR")
+                      .requestMatchers("/api/{version}/module_usuarios/participante/**").hasRole("PARTICIPANTE")
+                      // .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                      .anyRequest().authenticated()
+              )
+              .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+      return http.build();
   }
 
   @Bean

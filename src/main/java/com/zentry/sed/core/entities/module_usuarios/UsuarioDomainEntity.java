@@ -3,13 +3,11 @@ package com.zentry.sed.core.entities.module_usuarios;
 import java.time.LocalDateTime;
 
 public class UsuarioDomainEntity {
-    
     private String id;
-    private String nombre;
+    private String nombreCompleto;
     private String correo;
-    private String rolId;
     private String passwordHash;
-    private String estado;
+    private EstadoUsuarioDomainEntity estadoUsuarioDomainEntity;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
 
@@ -20,11 +18,11 @@ public class UsuarioDomainEntity {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getCorreo() {
@@ -34,13 +32,6 @@ public class UsuarioDomainEntity {
         this.correo = correo;
     }
 
-    public String getRolId() {
-        return rolId;
-    }
-    public void setRolId(String rolId) {
-        this.rolId = rolId;
-    }
-
     public String getPasswordHash() {
         return passwordHash;
     }
@@ -48,11 +39,11 @@ public class UsuarioDomainEntity {
         this.passwordHash = passwordHash;
     }
 
-    public String getEstado() {
-        return estado;
+    public EstadoUsuarioDomainEntity getEstadoUsuarioDomainEntity() {
+        return estadoUsuarioDomainEntity;
     }
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setEstadoUsuarioDomainEntity(EstadoUsuarioDomainEntity estadoUsuarioDomainEntity) {
+        this.estadoUsuarioDomainEntity = estadoUsuarioDomainEntity;
     }
 
     public LocalDateTime getCreadoEn() {
@@ -67,5 +58,25 @@ public class UsuarioDomainEntity {
     }
     public void setActualizadoEn(LocalDateTime actualizadoEn) {
         this.actualizadoEn = actualizadoEn;
+    }
+
+    public static UsuarioDomainEntity create(
+        String nombreCompleto,
+        String correo,
+        String passwordHash,
+        EstadoUsuarioDomainEntity estadoUsuarioDomainEntity
+    ){
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        UsuarioDomainEntity usuarioDomainEntity = new UsuarioDomainEntity();
+
+        usuarioDomainEntity.setNombreCompleto(nombreCompleto);
+        usuarioDomainEntity.setCorreo(correo);
+        usuarioDomainEntity.setPasswordHash(passwordHash);
+        usuarioDomainEntity.setEstadoUsuarioDomainEntity(estadoUsuarioDomainEntity);
+        usuarioDomainEntity.setCreadoEn(nowDateTime);
+        usuarioDomainEntity.setActualizadoEn(nowDateTime);
+
+        return usuarioDomainEntity;
     }
 }

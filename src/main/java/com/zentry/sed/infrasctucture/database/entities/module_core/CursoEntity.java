@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,16 +26,15 @@ public class CursoEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe proporcionar un nombre.")
-    @Size(max = 100 , message = "El nombre debe tener menos de 100 caracteres.")
+    @Column(name = "nombre" , length = 100 , nullable = false)
     private String nombre;
 
-    @NotNull(message = "Debe proporcionar un codigo.")
-    @Size(max = 20 , message = "El codigo debe tener menos de 20 caracteres.")
+    @Column(name = "codigo" , length = 20 , nullable = false , unique = true)
     private String codigo;
 
-    @Size(max = 100 , message = "El nombre de la facultad debe tener menos de 100 caracteres.")
+    @Column(name = "facultad" , length = 100 , nullable = true)
     private String facultad;
 
+    @Column(name = "creditos" , nullable = true)
     private Integer creditos;
 }

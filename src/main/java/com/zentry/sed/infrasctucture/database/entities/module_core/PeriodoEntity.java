@@ -7,18 +7,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
     name = "periodo" , 
-    indexes = {
-        @Index(name = "idx_periodo" , columnList = "anio,term" , unique = true)
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "Periodo_Anio_Termino_UQ" , 
+            columnNames = {"anio" , "termino"}
+        )
     }
 )
 @Getter
@@ -33,16 +34,18 @@ public class PeriodoEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe proporcionar un año.")
+    @Column(name = "anio" , nullable = false)
     private Integer anio;
 
-    @NotNull(message = "Debe proporcionar un term.")
-    @Size(max = 20 , message = "Debe tener menos de 20 caracteres.")
-    private String term;
+    @Column(name = "termino" , length = 20 , nullable = false)
+    private String termino;
 
-    @Column(name = "fecha_inicio" , columnDefinition = "DATE")
+    @Column(name = "fecha_inicio" , columnDefinition = "DATE" , nullable = true)
     private LocalDate fechaInicio;
     
-    @Column(name = "fecha_fin" , columnDefinition = "DATE")
+    @Column(name = "fecha_fin" , columnDefinition = "DATE" , nullable = true)
     private LocalDate fechaFin;
+
+    @Column(name = "estado_periodo_id" , nullable = false)
+    private EstadoPeriodoEntity estadoPeriodo;
 }

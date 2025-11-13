@@ -11,7 +11,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,13 +33,11 @@ public class InstrumentoEscalaEntity {
     )
     private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instrumento_id")
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "instrumento_id" , nullable = false)
     private InstrumentoEntity instrumento;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "escala_id")
+    @JoinColumn(name = "escala_id" , nullable = false)
     private EscalaEntity escala;
 }

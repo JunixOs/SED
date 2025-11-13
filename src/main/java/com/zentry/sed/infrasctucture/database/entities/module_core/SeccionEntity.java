@@ -9,20 +9,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
     name = "seccion" , 
-    indexes = {
-        @Index(name = "idx_seccion" , columnList = "curso_id,periodo_id,codigo_seccion" , unique = true)
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "Seccion_Curso_Periodo_Codigo_UQ" , 
+            columnNames = {"curso_id" , "periodo_id" , "codigo_seccion"} 
+        )
     }
 )
 @Getter
@@ -37,24 +38,22 @@ public class SeccionEntity {
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "curso_id")
+    @JoinColumn(name = "curso_id" , nullable = false)
     private CursoEntity curso;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodo_id")
+    @JoinColumn(name = "periodo_id" , nullable = false)
     private PeriodoEntity periodo;
     
-    @Size(max = 20 , message = "El codigo debe tener menos de 20 caracteres.")
-    @Column(name = "codigo_seccion")
+    @Column(name = "codigo_seccion" , length = 20 , nullable = true)
     private String codigoSeccion;
     
-    @Size(max = 20 , message = "La modalidad debe tener menos de 20 caracteres.")
-    private String modalidad;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_modalidad_seccion" , nullable = false)
+    private ModalidadSeccionEntity modalidad;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "docente_titular_id")
+    @JoinColumn(name = "docente_titular_id" , nullable = true)
     private DocenteEntity docente;
 }

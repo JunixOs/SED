@@ -12,10 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,25 +31,21 @@ public class PreguntaEntity {
     )
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modulo_id")
+    @JoinColumn(name = "modulo_id" , nullable = false)
     private ModuloEntity modulo;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "criterio_id")
+    @JoinColumn(name = "criterio_id" , nullable = true)
     private CriterioEntity criterio;
 
-    @NotNull(message = "Debe especificar un enunciado.")
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "enunciado" , columnDefinition = "TEXT" , nullable = false)
     private String enunciado;
 
+    @Column(name = "orden" , nullable = true)
     private Integer orden;
 
-    @Digits(integer = 3 , fraction = 3 , message = "Solo se permiten numeros entre 0 y 999.999") // Aplica para JAVA, validacion
-    @Column(name = "peso_pregunta" , precision = 6 , scale = 3) // Solo aplica para SQL
-    @DecimalMin("0.000")
-    @DecimalMax("999.999")
+    @Column(name = "peso_pregunta" , precision = 6 , scale = 3 , nullable = true) // Solo aplica para SQL
     private BigDecimal pesoPregunta;
 }

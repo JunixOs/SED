@@ -1,27 +1,36 @@
 package com.zentry.sed.infrasctucture.database.mappers.module_core;
 
-import com.zentry.sed.core.entities.module_core.PeriodoDomainEntitiy;
+import com.zentry.sed.core.entities.module_core.PeriodoDomainEntity;
+import com.zentry.sed.infrasctucture.database.entities.module_core.EstadoPeriodoEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_core.PeriodoEntity;
 
 public class PeriodoMapper {
-    public static PeriodoEntity toEntity(PeriodoDomainEntitiy periodo){
+    public static PeriodoEntity toEntity(
+        PeriodoDomainEntity periodoDomainEntitiy , 
+        EstadoPeriodoEntity estadoPeriodoEntity
+    ){
         PeriodoEntity periodoEntity = new PeriodoEntity();
 
-        periodoEntity.setAnio(periodo.getAnio());
-        periodoEntity.setTerm(periodo.getTerm());
-        periodoEntity.setFechaInicio(periodo.getFechaInicio());
-        periodo.setFechaFin(periodo.getFechaFin());
+        periodoEntity.setAnio(periodoDomainEntitiy.getAnio());
+        periodoEntity.setTermino(periodoDomainEntitiy.getTermino());
+        periodoEntity.setFechaInicio(periodoDomainEntitiy.getFechaInicio());
+        periodoEntity.setFechaFin(periodoDomainEntitiy.getFechaFin());
+        periodoEntity.setEstadoPeriodo(estadoPeriodoEntity);
 
         return periodoEntity;
     }
 
-    public static PeriodoDomainEntitiy toDomain(PeriodoEntity periodo){
-        PeriodoDomainEntitiy periodoDomainEntitiy = new PeriodoDomainEntitiy();
+    public static PeriodoDomainEntity toDomain(PeriodoEntity periodoEntity){
+        PeriodoDomainEntity periodoDomainEntitiy = new PeriodoDomainEntity();
 
-        periodoDomainEntitiy.setAnio(periodo.getAnio());
-        periodoDomainEntitiy.setTerm(periodo.getTerm());
-        periodoDomainEntitiy.setFechaInicio(periodo.getFechaInicio());
-        periodoDomainEntitiy.setFechaFin(periodo.getFechaFin());
+        periodoDomainEntitiy.setId(periodoEntity.getId().toString());
+        periodoDomainEntitiy.setAnio(periodoEntity.getAnio());
+        periodoDomainEntitiy.setTermino(periodoEntity.getTermino());
+        periodoDomainEntitiy.setFechaInicio(periodoEntity.getFechaInicio());
+        periodoDomainEntitiy.setFechaFin(periodoEntity.getFechaFin());
+        periodoDomainEntitiy.setEstadoPeriodoDomainEntity(
+            EstadoPeriodoMapper.toDomain(periodoEntity.getEstadoPeriodo())
+        );
 
         return periodoDomainEntitiy;
     }

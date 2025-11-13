@@ -4,15 +4,14 @@ import java.util.UUID;
 
 import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,21 +24,23 @@ import lombok.Setter;
 public class EstudianteEntity {
 
     @Id
+    @GeneratedValue
+    @Column(
+        name = "id_estudiante", updatable = false, nullable = false,
+        columnDefinition = "UUID DEFAULT gen_random_uuid()"
+    )
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario" , nullable = false)
     private UsuarioEntity usuario;
 
-    @NotNull(message = "Debe especificar el semestre.")
-    @Size(max = 10 , message = "El semestre debe tener menos de 10 caracteres.")
+    @Column(name = "semestre" , length = 10 , nullable = false)
     private String semestre;
 
-    @NotNull(message = "Debe especificar la carrera.")
-    @Size(max = 100 , message = "La carrera debe tener menos de 100 caracteres.")
+    @Column(name = "carrera" , length = 100 , nullable = false)
     private String carrera;
 
-    @Size(max = 20 , message = "El codigo debe tener menos de 20 caracteres.")
-    private String codigo;
+    @Column(name = "codigo_estudiante" , length = 20 , nullable = true , unique = true)
+    private String codigoEstudiante;
 }

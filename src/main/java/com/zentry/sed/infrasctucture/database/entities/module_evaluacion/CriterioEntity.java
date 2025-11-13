@@ -8,8 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,11 +27,10 @@ public class CriterioEntity {
     )
     private UUID id;
 
-    @NotNull(message = "Debe proporcionar un nombre.")
-    @Size(max = 100 , message = "El nombre debe tener menos de 100 caracteres.")
+    @Column(name = "nombre" , length = 100 , nullable = false)
     private String nombre;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "descripcion" , columnDefinition = "TEXT" , nullable = true)
     private String descripcion;
 }

@@ -34,4 +34,10 @@ public class UsuarioRepositoryAdapter implements IUsuarioRepository {
     public Optional<UsuarioDomainEntity> findByCorreo(String correo){
         return usuarioJPARepository.findByCorreo(correo).map(u -> UsuarioMapper.toDomain(u));
     }
+
+    public void save(UsuarioDomainEntity usuarioDomainEntity){
+        usuarioJPARepository.save(
+            UsuarioMapper.toEntity(usuarioDomainEntity)
+        );
+    }
 }

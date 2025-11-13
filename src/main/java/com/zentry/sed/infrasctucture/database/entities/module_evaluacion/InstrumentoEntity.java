@@ -10,17 +10,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(
-    name = "instrumento"
+    name = "instrumento" , 
+    indexes = {
+        @Index(name = "idx_instrumento" , columnList = "nombre,version" , unique = true)
+    }
 )
 @Getter
 @Setter
@@ -34,20 +36,19 @@ public class InstrumentoEntity {
     )
     private UUID id;
 
-    @NotNull
-    @Size(max = 100 , message = "El nombre debe tener menos de 100 caracteres.")
+    @Column(name = "nombre" , length = 100 , nullable = false)
     private String nombre;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodo_id")
+    @JoinColumn(name = "periodo_id" , nullable = true)
     private PeriodoEntity periodo;
 
-    @NotNull
+    @Column(name = "version" , nullable = false)
     private Integer version;
 
-    @NotNull
+    @Column(name = "vigente" , nullable = false)
     private Boolean vigente = true;
 
-    @Column(name = "creado_en" , columnDefinition = "TIMESTAMP")
+    @Column(name = "creado_en" , columnDefinition = "TIMESTAMP" , nullable = true)
     private LocalDateTime creadoEn;
 }
