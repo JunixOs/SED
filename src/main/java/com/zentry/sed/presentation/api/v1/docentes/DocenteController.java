@@ -1,15 +1,15 @@
-package com.zentry.sed.presentation.api.comision;
+package com.zentry.sed.presentation.api.v1.docentes;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/comision")
-public class ComisionController {
+@RequestMapping("/docente")
+public class DocenteController {
 
     @GetMapping({"/dashboard" , ""})
-    public String comisionIndex(){
-        return "comision/dashboard";
+    public String docenteIndex(){
+        return "docente/dashboard";
     } 
 }

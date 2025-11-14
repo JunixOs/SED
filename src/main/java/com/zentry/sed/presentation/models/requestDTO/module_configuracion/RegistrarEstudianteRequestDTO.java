@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class RegistrarEstudianteRequestDTO extends RegistrarUsuarioAbsClass {
+public class RegistrarEstudianteRequestDTO extends RegistrarUsuarioRequestDTOAbsClass {
     @NotBlank(message = "Debe proporcionar el semestre.")
     @Size(max = 10 , message = "El semestre no debe tener mas de 10 caracteres.")
     private String semestre;

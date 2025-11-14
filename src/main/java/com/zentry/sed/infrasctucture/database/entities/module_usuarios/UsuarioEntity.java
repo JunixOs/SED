@@ -32,7 +32,8 @@ public class UsuarioEntity implements Serializable {
     @Column(name = "password_hash", length = 128, nullable = false)
     private String passwordHash;
 
-    @Column(name = "estado_usuario_id" , length = 20)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_usuario_id" , nullable = false)
     private EstadoUsuarioEntity estadoUsuarioEntity;
 
     @Column(name = "creado_en", columnDefinition = "TIMESTAMP")

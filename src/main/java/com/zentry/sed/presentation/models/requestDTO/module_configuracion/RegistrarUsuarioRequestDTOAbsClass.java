@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public abstract class RegistrarUsuarioAbsClass {
+public abstract class RegistrarUsuarioRequestDTOAbsClass {
     @NotBlank(message = "Debe proporcionar sus nombres.")
     @Size(max = 100 , message = "Sus nombres no deben tener más de 100 caracteres.")
     private String nombreCompleto;

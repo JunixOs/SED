@@ -2,6 +2,7 @@ package com.zentry.sed.infrasctucture.database.adapter.module_usuarios;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,11 @@ public class UsuarioRepositoryAdapter implements IUsuarioRepository {
 
     public Optional<UsuarioDomainEntity> findByCorreo(String correo){
         return usuarioJPARepository.findByCorreo(correo).map(u -> UsuarioMapper.toDomain(u));
+    }
+
+    public Optional<UsuarioDomainEntity> findById(String id){
+        return usuarioJPARepository.findById(UUID.fromString(id))
+            .map(u -> UsuarioMapper.toDomain(u));
     }
 
     public void save(UsuarioDomainEntity usuarioDomainEntity){

@@ -1,4 +1,4 @@
-package com.zentry.sed.presentation.api;
+package com.zentry.sed.presentation.api.v1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.zentry.sed.presentation.models.requestDTO.module_usuarios.LoginRequestDTO;
-import com.zentry.sed.services.module_usuarios.AuthService;
+import com.zentry.sed.services.module_usuarios.LoginUsuarioService;
 
 import jakarta.validation.Valid;
 
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class LoginUsuariosApiRestController {
 
     @Autowired
-    private AuthService authService;
+    private LoginUsuarioService authService;
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUsuario(
