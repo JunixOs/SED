@@ -26,7 +26,7 @@ public class CanalEntity {
     )
     private UUID id;
 
-    @Column(name = "codigo" , length = 20 , nullable = false)
+    @Column(name = "codigo" , length = 20 , nullable = false , unique = true)
     private String codigo;
 
     @Column(name = "etiqueta" , length = 50 , nullable = true)

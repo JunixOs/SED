@@ -1,21 +1,21 @@
 package com.zentry.sed.infrasctucture.database.mappers.module_usuarios;
 
 import com.zentry.sed.core.entities.module_usuarios.UsuarioDomainEntity;
+import com.zentry.sed.infrasctucture.database.entities.module_usuarios.EstadoUsuarioEntity;
 import com.zentry.sed.infrasctucture.database.entities.module_usuarios.UsuarioEntity;
 
 public class UsuarioMapper {
     
     public static UsuarioEntity toEntity(
-        UsuarioDomainEntity usuarioDomainEntity
+        UsuarioDomainEntity usuarioDomainEntity , 
+        EstadoUsuarioEntity estadoUsuarioEntity
     ){
         UsuarioEntity usuarioEntity = new UsuarioEntity();
 
         usuarioEntity.setNombreCompleto(usuarioDomainEntity.getNombreCompleto());
         usuarioEntity.setCorreo(usuarioDomainEntity.getCorreo());
         usuarioEntity.setPasswordHash(usuarioDomainEntity.getPasswordHash());
-        usuarioEntity.setEstadoUsuarioEntity(
-            EstadoUsuarioMapper.toEntity(usuarioDomainEntity.getEstadoUsuarioDomainEntity())
-        );
+        usuarioEntity.setEstadoUsuarioEntity(estadoUsuarioEntity);
         usuarioEntity.setCreadoEn(usuarioDomainEntity.getCreadoEn());
         usuarioEntity.setActualizadoEn(usuarioDomainEntity.getActualizadoEn());
         

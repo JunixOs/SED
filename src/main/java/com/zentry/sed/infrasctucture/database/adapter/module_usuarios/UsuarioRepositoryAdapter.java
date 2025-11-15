@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import com.zentry.sed.core.entities.module_usuarios.UsuarioDomainEntity;
 import com.zentry.sed.core.repositories.module_usuarios.IUsuarioRepository;
+import com.zentry.sed.infrasctucture.database.entities.module_usuarios.EstadoUsuarioEntity;
 import com.zentry.sed.infrasctucture.database.mappers.module_usuarios.UsuarioMapper;
+import com.zentry.sed.infrasctucture.repositories.module_usuarios.EstadoUsuarioJPARepository;
 import com.zentry.sed.infrasctucture.repositories.module_usuarios.UsuarioJPARepository;
 
 import io.micrometer.common.lang.NonNull;
@@ -18,9 +20,14 @@ import io.micrometer.common.lang.NonNull;
 public class UsuarioRepositoryAdapter implements IUsuarioRepository {
     
     private final UsuarioJPARepository usuarioJPARepository;
+    private final EstadoUsuarioJPARepository estadoUsuarioJPARepository;
 
-    public UsuarioRepositoryAdapter(UsuarioJPARepository usuarioJPARepository){
+    public UsuarioRepositoryAdapter(
+        UsuarioJPARepository usuarioJPARepository , 
+        EstadoUsuarioJPARepository estadoUsuarioJPARepository
+    ){
         this.usuarioJPARepository = usuarioJPARepository;
+        this.estadoUsuarioJPARepository = estadoUsuarioJPARepository;
     }
 
     @Override
@@ -42,8 +49,16 @@ public class UsuarioRepositoryAdapter implements IUsuarioRepository {
     }
 
     public void save(UsuarioDomainEntity usuarioDomainEntity){
+
+        EstadoUsuarioEntity estadoUsuarioEntity = estadoUsuarioJPARepository.findById(
+            UUID.fromString(usuarioDomainEntity.getEstadoUsuarioDomainEntity().getId())
+        ).orElse(null);
+
         usuarioJPARepository.save(
-            UsuarioMapper.toEntity(usuarioDomainEntity)
+            UsuarioMapper.toEntity(
+                usuarioDomainEntity , 
+                estadoUsuarioEntity
+            )
         );
     }
 }
