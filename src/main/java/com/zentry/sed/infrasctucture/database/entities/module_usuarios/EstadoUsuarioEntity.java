@@ -25,7 +25,7 @@ public class EstadoUsuarioEntity {
         columnDefinition = "UUID DEFAULT gen_random_uuid()")
     private UUID id;
 
-    @Column(name = "codigo" , nullable = false , length = 30)
+    @Column(name = "codigo" , nullable = false , length = 30 , unique = true)
     private String codigo;
 
     @Column(name = "etiqueta" , nullable = true , length = 50)

@@ -5,11 +5,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Repository;
+
 import com.zentry.sed.core.entities.module_usuarios.EstadoUsuarioDomainEntity;
 import com.zentry.sed.core.repositories.module_usuarios.IEstadoUsuarioRepository;
 import com.zentry.sed.infrasctucture.database.mappers.module_usuarios.EstadoUsuarioMapper;
 import com.zentry.sed.infrasctucture.repositories.module_usuarios.EstadoUsuarioJPARepository;
 
+@Repository
 public class EstadoUsuarioRepositoryAdapter implements IEstadoUsuarioRepository {
     
     private final EstadoUsuarioJPARepository estadoUsuarioJPARepository;

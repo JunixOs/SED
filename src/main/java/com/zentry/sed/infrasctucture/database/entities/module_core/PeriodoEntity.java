@@ -7,6 +7,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -46,6 +48,7 @@ public class PeriodoEntity {
     @Column(name = "fecha_fin" , columnDefinition = "DATE" , nullable = true)
     private LocalDate fechaFin;
 
-    @Column(name = "estado_periodo_id" , nullable = false)
+    @OneToOne
+    @JoinColumn(name = "estado_periodo_id" , nullable = false)
     private EstadoPeriodoEntity estadoPeriodo;
 }

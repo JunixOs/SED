@@ -13,7 +13,7 @@ import com.zentry.sed.infrasctucture.database.entities.module_evaluacion.Respues
 public interface RespuestaJPARepository extends JpaRepository<RespuestaEntitiy , UUID>{
     @Query(
         """
-            SELECT p FROM RespuestaEntity r 
+            SELECT p FROM RespuestaEntitiy r 
             JOIN r.pregunta p 
             WHERE r.evaluacion.id = :evaluacionId
         """

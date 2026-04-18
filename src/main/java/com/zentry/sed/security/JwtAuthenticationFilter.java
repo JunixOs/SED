@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.Claims;
@@ -16,6 +17,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Service
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private final JwtUtil jwtUtil;
@@ -30,27 +32,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HttpServletResponse response , 
         FilterChain filterChain
     ) throws ServletException , IOException {
+        
+        if (request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 
-        if(header != null && header.startsWith("Bearer")){
-            try {
-                String token = header.substring(7);
-                Claims claims = jwtUtil.extractClaims(token);
+        if (header == null || !header.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-                String email = claims.getSubject();
-                List<String> roles = claims.get("roles" , List.class);
+        try {
+            String token = header.substring(7);
+            Claims claims = jwtUtil.extractClaims(token);
 
-                var authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+            String email = claims.getSubject();
+            List<String> roles = claims.get("roles" , List.class);
 
-                Authentication auth = new UsernamePasswordAuthenticationToken(email, null , authorities);
+            var authorities = roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED , "Token invalido");
-                return;
-            }
+            Authentication auth = new UsernamePasswordAuthenticationToken(email, null , authorities);
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED , "Token invalido");
+            return;
         }
 
         filterChain.doFilter(request , response);

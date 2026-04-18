@@ -41,12 +41,23 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/{version}/module_usuarios/auth/login", "/").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/webjars/**").permitAll()
-                        .requestMatchers("/api/{version}/module_configuracion/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/api/{version}/module_comision/**").hasRole("COMISION")
-                        .requestMatchers("/api/{version}/module_alumnos/**").hasRole("ALUMNO")
-                        .requestMatchers("/api/{version}/module_docente/**").hasRole("DOCENTE")
+                        .requestMatchers(
+                            "/api/{version}/module_usuarios/auth/login", 
+                            "/",
+                            "/login"
+                        ).permitAll()
+                        .requestMatchers(
+                            "/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/v3/api-docs",
+                            "/swagger-resources/**",
+                            "/webjars/**"
+                        ).permitAll()
+                        // .requestMatchers("/api/{version}/module_configuracion/**").hasRole("ADMINISTRADOR")
+                        // .requestMatchers("/api/{version}/module_comision/**").hasRole("COMISION")
+                        // .requestMatchers("/api/{version}/module_alumnos/**").hasRole("ALUMNO")
+                        // .requestMatchers("/api/{version}/module_docente/**").hasRole("DOCENTE")
                         // .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )

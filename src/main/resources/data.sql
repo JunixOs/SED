@@ -2,7 +2,20 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- 1) Limpiar e insertar roles
--- Usamos DELETE primero para evitar duplicados
+
+-- Limpiar relaciones
+DELETE FROM usuario_rol 
+WHERE usuario_id IN (
+    SELECT id_usuario FROM usuario 
+    WHERE correo IN (
+        'admin@sed.com',
+        'comision@sed.com',
+        'docente@sed.com',
+        'alumno@sed.com'
+    )
+);
+
+-- Limpiar Usuarios
 DELETE FROM usuario WHERE correo IN (
     'admin@sed.com',
     'comision@sed.com',
@@ -13,33 +26,107 @@ DELETE FROM usuario WHERE correo IN (
 DELETE FROM rol WHERE nombre IN ('admin', 'comision', 'docente', 'alumno');
 
 -- Insertar roles de manera segura
-INSERT INTO rol (nombre, permisos)
+INSERT INTO rol (nombre)
 VALUES 
-('admin', NULL),
-('comision', NULL),
-('docente', NULL),
-('alumno', NULL)
+('admin'),
+('comision'),
+('docente'),
+('alumno')
 ON CONFLICT (nombre) DO NOTHING;
 
--- 2) Limpiar e insertar usuarios
+-- 2) Limpiar e insertar estados de usuario
 
--- Inserción de usuarios usando SELECT de roles
-INSERT INTO usuario (nombre, correo, rol_id, password_hash, estado, creado_en)
-SELECT 'Administrador', 'admin@sed.com', id_rol, crypt('123456', gen_salt('bf', 10)), 'ACTIVO', now()
-FROM rol WHERE nombre = 'admin'
-ON CONFLICT (correo) DO NOTHING;
+DELETE FROM usuario WHERE correo IN (
+    'admin@sed.com',
+    'comision@sed.com',
+    'docente@sed.com',
+    'alumno@sed.com'
+);
 
-INSERT INTO usuario (nombre, correo, rol_id, password_hash, estado, creado_en)
-SELECT 'Comisión', 'comision@sed.com', id_rol, crypt('123456', gen_salt('bf', 10)), 'ACTIVO', now()
-FROM rol WHERE nombre = 'comision'
-ON CONFLICT (correo) DO NOTHING;
+DELETE FROM estado_usuario WHERE codigo IN (
+    'ACTIVE',
+    'DELETED',
+    'INACTIVE',
+    'SUSPENDED'
+);
 
-INSERT INTO usuario (nombre, correo, rol_id, password_hash, estado, creado_en)
-SELECT 'Docente', 'docente@sed.com', id_rol, crypt('123456', gen_salt('bf', 10)), 'ACTIVO', now()
-FROM rol WHERE nombre = 'docente'
-ON CONFLICT (correo) DO NOTHING;
+INSERT INTO estado_usuario (codigo, etiqueta)
+VALUES 
+('ACTIVE', 'Activo'),
+('DELETED', 'Eliminado'),
+('INACTIVE', 'Inactivo'),
+('SUSPENDED', 'Suspendido')
+ON CONFLICT (codigo) DO NOTHING;
 
-INSERT INTO usuario (nombre, correo, rol_id, password_hash, estado, creado_en)
-SELECT 'Alumno', 'alumno@sed.com', id_rol, crypt('123456', gen_salt('bf', 10)), 'ACTIVO', now()
-FROM rol WHERE nombre = 'alumno'
-ON CONFLICT (correo) DO NOTHING;
+
+-- 3) Insertar usuarios correctamente (usando FK real)
+
+INSERT INTO usuario (nombre_completo, correo, estado_usuario_id, password_hash, creado_en, actualizado_en)
+SELECT 
+    'Administrador',
+    'admin@sed.com',
+    e.id_estado_usuario,
+    crypt('123456', gen_salt('bf', 10)),
+    now(),
+    now()
+FROM estado_usuario e
+WHERE e.codigo = 'ACTIVE';
+
+INSERT INTO usuario (nombre_completo, correo, estado_usuario_id, password_hash, creado_en, actualizado_en)
+SELECT 
+    'Comisión',
+    'comision@sed.com',
+    e.id_estado_usuario,
+    crypt('123456', gen_salt('bf', 10)),
+    now(),
+    now()
+FROM estado_usuario e
+WHERE e.codigo = 'ACTIVE';
+
+INSERT INTO usuario (nombre_completo, correo, estado_usuario_id, password_hash, creado_en, actualizado_en)
+SELECT 
+    'Docente',
+    'docente@sed.com',
+    e.id_estado_usuario,
+    crypt('123456', gen_salt('bf', 10)),
+    now(),
+    now()
+FROM estado_usuario e
+WHERE e.codigo = 'ACTIVE';
+
+INSERT INTO usuario (nombre_completo, correo, estado_usuario_id, password_hash, creado_en, actualizado_en)
+SELECT 
+    'Alumno',
+    'alumno@sed.com',
+    e.id_estado_usuario,
+    crypt('123456', gen_salt('bf', 10)),
+    now(),
+    now()
+FROM estado_usuario e
+WHERE e.codigo = 'ACTIVE';
+
+
+-- Insertar relaciones
+INSERT INTO usuario_rol (usuario_id, rol_id)
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+JOIN rol r ON r.nombre = 'admin'
+WHERE u.correo = 'admin@sed.com';
+
+INSERT INTO usuario_rol (usuario_id, rol_id)
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+JOIN rol r ON r.nombre = 'comision'
+WHERE u.correo = 'comision@sed.com';
+
+INSERT INTO usuario_rol (usuario_id, rol_id)
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+JOIN rol r ON r.nombre = 'docente'
+WHERE u.correo = 'docente@sed.com';
+
+INSERT INTO usuario_rol (usuario_id, rol_id)
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+JOIN rol r ON r.nombre = 'alumno'
+WHERE u.correo = 'alumno@sed.com';
